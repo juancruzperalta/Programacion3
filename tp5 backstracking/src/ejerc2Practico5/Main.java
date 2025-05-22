@@ -31,7 +31,7 @@ public class Main {
 
 		Casilla inicio = laberinto[0][0];
 		Casilla objetivo = laberinto[3][3];
-		ejerc2Practico5 valor = new ejerc2Practico5(4, 4, objetivo, laberinto, null, inicio);
+		ejerc2Practico5 valor = new ejerc2Practico5(4, 4, objetivo, laberinto, inicio);
 		
 		valor.backTracking();
 		valor.imprimirEstado();

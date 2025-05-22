@@ -62,16 +62,10 @@ public class ejerc11Practico5 {
 	}
 	public void imprimirCaminoCorto() {
 	    List<Celda> camino = caminoMasCorto.getCaminoMasCorto();
-
-	    if (camino.isEmpty()) {
-	        System.out.println("No se encontró un camino hacia la fuente de carga.");
-	    } else {
-	        System.out.println("Camino más corto hasta la fuente de carga:");
-	        for (int i = 0; i < camino.size(); i++) {
-	            Celda c = camino.get(i);
-	            System.out.printf("Paso %d -> Fila: %d, Columna: %d\n", i + 1, c.getFila(), c.getCol());
+	     for (int i = 0; i < camino.size(); i++) {
+	        Celda c = camino.get(i);
+	            System.out.println("Paso "+ i + " Fila " + c.getFila() + " | Col " + c.getCol());
 	        }
-	        System.out.println("Cantidad total de pasos: " + this.caminoMasCorto.getPasosDadosMasCortos());
-	    }
+	     System.out.println("Cantidad total de pasos: " + this.caminoMasCorto.getPasosDadosMasCortos());
 	}
 }

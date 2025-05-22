@@ -6,7 +6,7 @@ import java.util.LinkedList;
 public class ejerc4Practico5 {
 	List<Integer> conjuntos;
 	Solucion soluciones;
-	
+	//Este me trabe y me falta seguir...
 	public ejerc4Practico5(List<Integer> conjuntos) {
 		super();
 		this.conjuntos = conjuntos;

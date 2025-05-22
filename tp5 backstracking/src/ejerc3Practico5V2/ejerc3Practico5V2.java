@@ -17,11 +17,10 @@ Combinaciones posibles:
 	List<Integer> conjuntos;
 	int valorObjetivo;
 	Solucion solucionActual;
-	public ejerc3Practico5V2(List<Integer> conjuntos, int valorObjetivo, Solucion solucionActual) {
+	public ejerc3Practico5V2(List<Integer> conjuntos, int valorObjetivo) {
 		super();
 		this.conjuntos = conjuntos;
 		this.valorObjetivo = valorObjetivo;
-		this.solucionActual = solucionActual;
 	}
 	public void backTracking() {
 		solucionActual = new Solucion(new LinkedList<>());

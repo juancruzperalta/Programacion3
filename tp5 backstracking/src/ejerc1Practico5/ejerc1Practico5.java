@@ -6,31 +6,30 @@ import java.util.Iterator;
 public class ejerc1Practico5 {	
 
 	Hashtable<Integer, List<Integer>> habitaciones;
-	Solucion mejorSolucion;
+	Solucion mayoresPasosDados;
 	int numeroEntrada;
 	int numeroSalida;
 
 	
-	public ejerc1Practico5(Hashtable<Integer, List<Integer>> habitaciones, Solucion mejorSolucion, int numeroEntrada,
+	public ejerc1Practico5(Hashtable<Integer, List<Integer>> habitaciones, int numeroEntrada,
 			int numeroSalida) {
 		super();
 		this.habitaciones = habitaciones;
-		this.mejorSolucion = mejorSolucion;
 		this.numeroEntrada = numeroEntrada;
 		this.numeroSalida = numeroSalida;
 	}
 	public void backTracking() {
 		Estado estadoInicial = new Estado(new LinkedList<>(), 0, 1);
-		
+		mayoresPasosDados = new Solucion(new LinkedList<>(), 0);
 		backTracking(estadoInicial);
 	}
 
 	private void backTracking(Estado e) {
 		if(e.numeroHabitacionActual() == numeroSalida) {
-			if(mejorSolucion==null|| e.pasosActuales > mejorSolucion.cantidadDePasosDados) {
-				mejorSolucion.cantidadDePasosDados = e.pasosActuales;
-				mejorSolucion.habitacionesPasadas.clear();
-				mejorSolucion.habitacionesPasadas.addAll(e.habitacionesVisitadas);
+			if(mayoresPasosDados==null|| e.pasosActuales > mayoresPasosDados.cantidadDePasosDados) {
+				mayoresPasosDados.habitacionesPasadas.clear();
+				mayoresPasosDados.cantidadDePasosDados = e.pasosActuales;
+				mayoresPasosDados.habitacionesPasadas.addAll(e.habitacionesVisitadas);
 			}
 		}else {
 			List<Integer> hijos = habitaciones.get(e.numeroHabitacionActual());
@@ -47,9 +46,9 @@ public class ejerc1Practico5 {
 		}
 	}
 	public void imprimirMetodo() {
-		System.out.println(mejorSolucion.getCantidadDePasosDados());
-		for(int i=0; i<mejorSolucion.habitacionesPasadas.size(); i++) {			
-		System.out.println(mejorSolucion.habitacionesPasadas.get(i));
+		for(int i=0; i<mayoresPasosDados.habitacionesPasadas.size(); i++) {			
+		System.out.println("Paso por ->" + mayoresPasosDados.habitacionesPasadas.get(i));
 		}
+		System.out.println("Pasos dados "+ mayoresPasosDados.getCantidadDePasosDados());
 	}
 }

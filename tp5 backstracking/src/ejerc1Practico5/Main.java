@@ -31,7 +31,7 @@ public class Main {
 		habitaciones.put(7, lista7);
 		List<Integer> visitadas = new LinkedList<>();
 		visitadas.add(1);
-		ejerc1Practico5 juego = new ejerc1Practico5(habitaciones, null, 1, 5);
+		ejerc1Practico5 juego = new ejerc1Practico5(habitaciones, 1, 5);
 		juego.backTracking();
 		juego.imprimirMetodo();
 	}

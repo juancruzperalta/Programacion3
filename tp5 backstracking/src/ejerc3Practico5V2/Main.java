@@ -12,7 +12,7 @@ public class Main {
 			conjuntos.add(4);
 		}
 		int valorObjetivo=12;
-		ejerc3Practico5V2 eje = new ejerc3Practico5V2(conjuntos, valorObjetivo, null);
+		ejerc3Practico5V2 eje = new ejerc3Practico5V2(conjuntos, valorObjetivo);
 		eje.backTracking();
 		eje.imprimirEstado();
 	}

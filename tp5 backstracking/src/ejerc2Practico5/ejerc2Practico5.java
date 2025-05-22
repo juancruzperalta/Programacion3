@@ -7,31 +7,31 @@ public class ejerc2Practico5 {
 	int col;
 	Casilla casillaBusqueda;//Casilla a buscar
 	Casilla[][] laberinto = new Casilla[fila][col];
-	Solucion mejorSolucion;
+	Solucion caminoMasCorto;
 	Casilla inicio;
 
 	
-	public ejerc2Practico5(int fila, int col, Casilla casillaBusqueda, Casilla[][] laberinto, Solucion mejorSolucion,
+	public ejerc2Practico5(int fila, int col, Casilla casillaBusqueda, Casilla[][] laberinto,
 			Casilla inicio) {
 		super();
 		this.fila = fila;
 		this.col = col;
 		this.casillaBusqueda = casillaBusqueda;
 		this.laberinto = laberinto;
-		this.mejorSolucion = mejorSolucion;
 		this.inicio = inicio;
 	}
 	public void backTracking() {
 		Estado estado = new Estado(new LinkedList<>(), inicio, 0, 0);
-		mejorSolucion = new Solucion(new LinkedList<>(), 0, 0);
+		caminoMasCorto = new Solucion(new LinkedList<>(), 0, 0);
 		estado.visitados.add(inicio);
 		backTracking(estado);
 	}
 	private void backTracking(Estado e) {
 		if(e.getCasillaActual() == casillaBusqueda) {
-			if(mejorSolucion.solucion.size()==0 || e.getValorTotalSuma() < mejorSolucion.sumaDeValores) {
-			    mejorSolucion.sumaDeValores = e.valorTotalSuma;
-			    mejorSolucion.solucion = new LinkedList<>(e.getVisitados());
+			if(caminoMasCorto.solucion.size()==0 || e.getValorTotalSuma() < caminoMasCorto.sumaDeValores) {
+				caminoMasCorto.solucion.clear();
+				caminoMasCorto.sumaDeValores = e.valorTotalSuma;
+				caminoMasCorto.solucion = new LinkedList<>(e.getVisitados());
 			}
 		}else {
 			List<Casilla> hijos = generarHijos(e.getCasillaActual());
@@ -69,11 +69,11 @@ public class ejerc2Practico5 {
 		return hijos;
 	}
 	public void imprimirEstado() {
-		for(int i=0; i<mejorSolucion.solucion.size(); i++) {
-			System.out.print(mejorSolucion.solucion.get(i));
+		for(int i=0; i<caminoMasCorto.solucion.size(); i++) {
+			System.out.print(caminoMasCorto.solucion.get(i));
 			System.out.println();
 		}
-		System.out.println("Pasos dados hasta el camino " + mejorSolucion.getPasosQueYaDi());
+		System.out.println("Pasos dados hasta el camino " + caminoMasCorto.getPasosQueYaDi());
 	}
 	
 }
