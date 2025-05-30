@@ -1,233 +1,103 @@
-import java.util.Iterator;
 
-public class MySimpleLinkedList<T extends Comparable<T>> implements Iterable<T>{
+public class MySimpleLinkedList<T> {
 	
-	private Node<T> first,last,prev;
+	private Node<T> first;
+	private Node<T> last;
 	private int size;
-	//O(1)
 	public MySimpleLinkedList() {
 		this.first = null;
 		this.last = null;
-		this.prev = null;
-		this.size = 0;
+		size=0;
 	}
 	//O(1)
 	public void insertFront(T info) {
-		Node<T> tmp = new Node<T>(info,null);
-		if(this.first==null) {
-			this.last = tmp;
-		}else {
-			tmp.setNext(this.first);
-			this.first.setPrev(tmp);	
+		Node<T> tmp = new Node<T>(info,null, null);
+		tmp.setNext(this.first);
+		if(tmp.getNext()==null) {			
+			this.last=tmp;
 		}
-		this.first = tmp;
+		if(tmp.getNext()!=null) {
+			this.first.setPrev(tmp);
+		}
 		this.size++;
+		this.first = tmp;
 	}
-	//O(1) ya que siempre es constante.
+	//O(1)
 	public void insertLast(T info) {
-		if(this.first==null) {
+		if(this.isEmpty()) {
 			this.insertFront(info);
-		}else {
-			this.last.setNext(new Node<T>(info, null));
-			size++;
+		}
+		Node<T> cursor = this.last;
+		Node<T> cursorNuevo = new Node<T>(info, null, null);
+		cursorNuevo.setPrev(cursor);
+		cursor.setNext(cursorNuevo);
+		this.size++;
+		this.last=cursorNuevo;
+	}
+	public T mostrarUltimoElemento() {
+		return this.last.getInfo();
+	}
+	//O(n)
+	public T extractFront() {		
+		Node<T> cursor = this.first;
+		if(this.first!=null) {
+		if(cursor.getNext() != null) {
+			Node<T> next = cursor.getNext();
+			this.first=next;
+			cursor.setNext(null);
+			this.size--;
+			return cursor.getInfo();
+		}
+			cursor.setNext(null);
+			this.size--;
+			return cursor.getInfo();
+			}
+		return null;
+	}
+	public void eliminarUltimo() {
+		if(this.last.getPrev() != null) {
+			this.last = this.last.getPrev();
+			this.last.setNext(null);
 		}
 	}
-	/*O(1) Ya que voy al siguiente una sola vez.*/
-	public T extractFront() {
-		Node<T> tmp = this.first;
-		if(this.first != null) {
-			tmp = this.first.getNext();
-		this.first=tmp;
-		this.size--;
-		}
-		else {
-		  return null;
-		}
-		return tmp.getInfo();
-	}
-	/*O(1) ya que solamente hace un acceso al tamaño.*/
+	//O(1);
 	public boolean isEmpty() {
-		if(this.first == null) {
-			return true;
-		}
-		return false;
+		return size==0;
 	}
-	
-    /*O(n) ya que debemos ingresar al nodo completo cada inserciones necesarias, 
-     * hasta encontrar el que buscamos.
-     */
+	//O(n)
 	public T get(int index) {
 		Node<T> cursor = this.first;
-		for(int i=0; i<this.size; i++) {
-			if(index!=i) {
-				cursor = cursor.getNext();
-			}else {				
+		int valor=0;
+		while(valor < size) {
+			if(valor==index) {
 				return cursor.getInfo();
 			}
+			valor++;
+			cursor = cursor.getNext();
 		}
 		return null;
 	}
-	
-	//---------------------------------------------------------------
-	/*O(1) sería en este caso por que accede solo una vez al tamaño*/
+	//O(1)
 	public int size() {
-		return size;
+		return this.size;
 	}
-	//---------------------------------------------------------------
-	//Ejercicio 3
-	/*O(n) ya que debo hacer un for buscando por todos los elementos, hasta encontrar
-	 * el que yo buscaba.
-	 */
-	public int indexOf(T elem) {
-		int i=0;
-		int pos=0;
-		Node<T> cursor = this.first;
-		if(cursor != null) {
-			while(i < size) {
-				if(cursor.getInfo().equals(elem)) {
-				pos+=i;
-				return pos;
-			}else {
-				cursor = cursor.getNext();
-			}
-			i++;
-		 }
-			return -1;
-		}
-		return -1;
-		
-	}
-	
-	//---------------------------------------------------------------
-	/*O(n) por que hago acceso a cada parte del nodo para buscar y dependiendo de cuantas
-tenga haré más o menos accesos.
-	 */
 	
 	@Override
 	public String toString() {
-		String cadena = "[";
-		Node<T> current = this.first;
-
-		while (current != null) {
-			cadena += current.getInfo();
-			if (current.getNext() != null) {
-				cadena += "-";
-			}
-			current = current.getNext();
-		}
-		cadena += "]";
-		return cadena;
+		return this.first.getInfo() + " | " + this.size;
 	}
-	
-	
-	
-	//---------------------------------------------------------------
-	//---------------------------------------------------------------
-	/*Metodo a revisar (O(n))
-	 * en el peor de los casos el anterior será el anteultimo
-	 */
-	public T getPrev(T valor) {
+	public int indexOf(T elem) {
 		Node<T> cursor = this.first;
-		while(cursor != null) {
-			if(cursor.getInfo().equals(valor)) {
-				if(cursor.getPrev()!=null) {
-					return cursor.getPrev().getInfo();
-				}else {
-					return null;
+		int value=0;
+		if(this.first!= null) {
+			while(value < size) {
+				if(cursor.getInfo() ==elem) {
+					return value;
 				}
-			}
-			cursor = cursor.getNext();
-		}
-		return null;
-	}
-	//---------------------------------------------------------------
-	@Override
-	/*
-	 * Metodo a revisar
-	 */
-	public Iterator<T> iterator() {
-		return new MiIterator<T>(this.first);
-	}
-	
-	//---------------------------------------------------------------
-	/*Metodo a revisar (hicimos en clase sin dos cursores, ahora intente con 2 cursores)
-	 * O(n) por que en el peor de los casos al que tengo que eliminar 
-	 * este en la última posición
-	 */
-	public void eliminarElemento(T valor) {
-		Node<T> cursor = this.first;
-		Node<T> cursorAvanzado = cursor.getNext();
-		if(cursor != null && cursorAvanzado != null) {
-			if(cursor.getInfo()==valor && cursor.getNext()!=null) {
-				this.first = cursor.getNext();
-			}else {
-				while(cursorAvanzado.getInfo() != valor) {
-					cursorAvanzado = cursorAvanzado.getNext();
-					cursor = cursor.getNext();
-				}
-				cursor.setNext(cursorAvanzado.getNext());
-			}
-		}
-		if(cursor.getInfo()==valor && cursor.getNext()==null) {
-			this.first = null;
-		}
-	}
-	/*Revisar
-	 * Esta es una de las maneras que se me ocurrió,
-	 * pero que sucede, primero copio las listas a la tercera,
-	 * uso bubleshort por qué todavía no había visto bien quickshort y mergeshort
-	 */
-	public void insertarAmbasListas(MySimpleLinkedList<T> Lista1, MySimpleLinkedList<T> Lista2) {
-		Node<T> cursor = Lista1.first;
-		Node<T> otraLista = Lista2.first;
-		
-		if(cursor == null || otraLista == null) return;
-		while(cursor != null && otraLista != null) {
-			this.insertFront(cursor.getInfo());
-			this.insertFront(otraLista.getInfo());
-			cursor = cursor.getNext();
-			otraLista = otraLista.getNext();
-		}
-	}
-	/*
-	 * Seria O(n), ahora por qué hago este metodo, por que en el caso que la lista 
-	 * ya esté ordenada, evito hacer un ORDENARME por ejemplo innecesariamente. 
-	 */
-	public boolean estoyOrdenado() {
-		Node<T> cursor = this.first;
-		//tengo uno solo, no avanzo más.
-		if(cursor ==null && cursor.getNext() == null) return true;
-		while(cursor != null && cursor.getNext() != null) {
-				if(cursor.getInfo().compareTo(cursor.getNext().getInfo()) > 0) {
-					return false;
-					}
+					value++;
 					cursor = cursor.getNext();
 			}
-		return true;
-	}
-	public void ordenarme() {
-	    Node<T> cursor = this.first;
-	    while(cursor != null) {
-	    	if(cursor.getNext() != null) {
-	    	if(cursor.getInfo().compareTo(cursor.getNext().getInfo()) > 0) {
-	    		T temp = cursor.getInfo();
-                cursor.setInfo(cursor.getNext().getInfo());
-                cursor.getNext().setInfo(temp);
-                ordenarme();
-	    		}
-	    	}
-	    	cursor = cursor.getNext();
-	    }
-	}
-	public int contarApariciones(T valor) {
-		int aparicion=0;
-		Node<T> cursor = this.first;
-		while(cursor != null) {
-			if(cursor.getInfo().equals(valor)) {
-				aparicion++;
-			}
-			cursor=cursor.getNext();
 		}
-		return aparicion;
+		return -1;
 	}
 }

@@ -2,9 +2,9 @@ import java.util.Iterator;
 
 public class MiIterator<T> implements Iterator<T>{
 
-	Node<T> cursor; 
+	NodeResuelto<T> cursor; 
 	
-	public MiIterator(Node<T> first) {
+	public MiIterator(NodeResuelto<T> first) {
 		this.cursor=first;
 	}
 	public boolean hasNext() {
