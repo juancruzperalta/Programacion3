@@ -1,3 +1,4 @@
+package arbolResuelto;
 
 public class Eje6 {
 /*

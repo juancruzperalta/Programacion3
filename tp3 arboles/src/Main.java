@@ -1,15 +1,25 @@
 import java.util.List;
 
+import arbolResuelto.TreeRes;
+
 public class Main {
 	public static void main(String[]args) {
-		//Tree t = new Tree();
-		/*t.add(6);
+		Tree t = new Tree();
+		t.add(6);
 		t.add(3);
 		t.add(1);
 		t.add(5);
 		t.add(4);
 		t.add(7);
-		t.add(9);*/
+		t.add(9);
+		//System.out.println(t.getRoot());
+		//System.out.println(t.hasElem(3));
+		//System.out.println("Esta vacio " + t.isEmpty());
+		//System.out.println(t.getHeight());
+		System.out.println("La rama más larga es la: " + t.getLongestBranch());
+		System.out.println("La frontera es: "+ t.getFrontera());
+		System.out.println("El elemento más grande es: " + t.getMaxElem());
+		System.out.println("GetElemAtLevel" + t.getElemAtLevel(0));
 		/*t.add(6);
 		t.add(2);
 		t.add(1);
@@ -40,7 +50,7 @@ public class Main {
 		//System.out.println("-------ARBOL BINARIO SIN BUSQUEDA-------");
         //FALTA HACER (no pude)
 		
-		System.out.println("---------ARBOL DE CARACTERES---------");
+	/*	System.out.println("---------ARBOL DE CARACTERES---------");
 		Tree t = new Tree();
 		t.addCaracter('M');
 		t.addCaracter('A');
@@ -52,6 +62,6 @@ public class Main {
 		t.addCaracter('O');
 		t.addCaracter('E');
 		t.printTreeCaracter();
-		System.out.println(t.buscarVocales(2));
+		System.out.println(t.buscarVocales(2));*/
 	}
 }
