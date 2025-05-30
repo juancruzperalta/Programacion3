@@ -1,47 +1,38 @@
 
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class GrafoDirigido<T> implements Grafo<T> {
 
-	
-	Hashtable<Integer, List<Arco<T>>> mapa_vertices;
-	
+	Hashtable<Integer, List<Arco<T>>> lista_vertices;
 	public GrafoDirigido() {
-		 mapa_vertices = new Hashtable<Integer, List<Arco<T>>>();
+		lista_vertices = new Hashtable<Integer, List<Arco<T>>>();
 	}
 	@Override
 	public void agregarVertice(int verticeId) {
 		if(!contieneVertice(verticeId)) {
-			 mapa_vertices.put(verticeId, new LinkedList<Arco<T>>());			
+			lista_vertices.put(verticeId, new LinkedList<Arco<T>>());
 		}
 	}
+
 	@Override
 	public void borrarVertice(int verticeId) {
 		if(contieneVertice(verticeId)) {
-			for(Integer vert : mapa_vertices.keySet()) {
-				if(verticeId == vert) {
-					List<Arco<T>> arcos = mapa_vertices.get(verticeId);
-					for(Arco<T> arc: arcos) {							
-						int destino = arc.getVerticeDestino();
-						borrarArco(verticeId, destino);
-						borrarArco(destino, verticeId);
+			for(Integer vert : lista_vertices.keySet()) {
+				for(Arco<T> arc : lista_vertices.get(vert)) {
+					if(arc.getVerticeDestino() != 0) {
+						borrarArco(verticeId, arc.getVerticeDestino());
 					}
+					borrarArco(vert, verticeId);
 				}
 			}
-			mapa_vertices.remove(verticeId);
 		}
 	}
 
 	@Override
 	public void agregarArco(int verticeId1, int verticeId2, T etiqueta) {
-		if(contieneVertice(verticeId1) && contieneVertice(verticeId2)) {			
+		if(contieneVertice(verticeId1) && contieneVertice(verticeId2)) {
 			if(!existeArco(verticeId1, verticeId2)) {
-				List<Arco<T>> arcos = mapa_vertices.get(verticeId1);
+				List<Arco<T>> arcos = lista_vertices.get(verticeId1);
 				arcos.add(new Arco<T>(verticeId1, verticeId2, etiqueta));
 			}
 		}
@@ -49,32 +40,37 @@ public class GrafoDirigido<T> implements Grafo<T> {
 
 	@Override
 	public void borrarArco(int verticeId1, int verticeId2) {
-		if(contieneVertice(verticeId1)) {
-			List<Arco<T>> arcos = mapa_vertices.get(verticeId1);
-			Arco<T> valor = null;
+		if(contieneVertice(verticeId1) && contieneVertice(verticeId2)) {
+			List<Arco<T>> arcos = lista_vertices.get(verticeId1);
 			for(Arco<T> arc: arcos) {
-				if(arc.getVerticeDestino()==verticeId2) {
-					valor = arc;
+				if(arc.getVerticeDestino() == verticeId2) {
+					System.out.println("eliminado");
+					arcos.remove(arc);
 				}
-			}
-			if(valor != null) {				
-			arcos.remove(valor);
 			}
 		}
 	}
 
 	@Override
 	public boolean contieneVertice(int verticeId) {
-		return mapa_vertices.containsKey(verticeId);
+		for(Integer vert: lista_vertices.keySet()) {
+			if(vert==verticeId) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@Override
 	public boolean existeArco(int verticeId1, int verticeId2) {
-		if(contieneVertice(verticeId1)) {
-			List<Arco<T>> arco = mapa_vertices.get(verticeId1);
-			for(Arco<T> arcos: arco) {
-				if(arcos.getVerticeDestino() == verticeId2) {
-					return true;
+		if(contieneVertice(verticeId1) && contieneVertice(verticeId2)) {
+			for(Integer vert: lista_vertices.keySet()) {
+				if(vert==verticeId1) {
+					for(Arco<T> arc: lista_vertices.get(vert)) {
+						if(arc.getVerticeDestino() ==verticeId2) {
+							return true;
+						}
+					}
 				}
 			}
 		}
@@ -84,395 +80,185 @@ public class GrafoDirigido<T> implements Grafo<T> {
 	@Override
 	public Arco<T> obtenerArco(int verticeId1, int verticeId2) {
 		if(contieneVertice(verticeId1)) {
-			for(Integer vert : mapa_vertices.keySet()) {
-				if(verticeId1 == vert) {
-				List<Arco<T>> arco = mapa_vertices.get(verticeId1);
-					for(Arco<T> arcos: arco) {
-						if(arcos.getVerticeDestino() == verticeId2) {
-							return arcos;
-							}
+			for(Integer vert : lista_vertices.keySet()) {
+				if(vert == verticeId1) {
+					List<Arco<T>> arcos = lista_vertices.get(verticeId1);
+					for(Arco<T> arc: arcos) {
+						if(arc.getVerticeDestino()==verticeId2) {
+							return arc;
 						}
 					}
 				}
 			}
+		}
 		return null;
 	}
 
+	@SuppressWarnings("unused")
 	@Override
 	public int cantidadVertices() {
-		return mapa_vertices.size();
+		return lista_vertices.size();
 	}
 
 	@Override
 	public int cantidadArcos() {
-		int cantidad=0;
-		  for (List<Arco<T>> arcos : mapa_vertices.values()) {
-		        cantidad += arcos.size();
-		    }
-		    return cantidad;
+		int cant=0;
+				Collection<List<Arco<T>>> arc = lista_vertices.values();
+				for(List<Arco<T>> arco: arc) {
+					cant+=arco.size();
+				}
+		return cant;
 	}
 
 	@Override
 	public Iterator<Integer> obtenerVertices() {
-		return mapa_vertices.keySet().iterator();
+		return lista_vertices.keySet().iterator();
 	}
 
 	@Override
-	/*List<Arco<T>> arcos = mapa_vertices.get(verticeId);
-		List<Integer> destinos = new LinkedList<Integer>();
-		for(Arco a: arcos) {
-			destinos.add(a.getVerticeDestino());
-		}
-		return destinos.iterator();*/
-	
 	public Iterator<Integer> obtenerAdyacentes(int verticeId) {
-		List<Arco<T>> arcos = mapa_vertices.get(verticeId);
-		return new IteratorArco<T>(arcos.iterator());
-	}
-
-	@Override
-	public Iterator<Arco<T>> obtenerArcos() {
-		List<Arco<T>> arcos = new LinkedList<>();
-		for(Integer vert: mapa_vertices.keySet()) {
-			for(Arco<T> arc: mapa_vertices.get(vert)) {
-				if(contieneVertice(arc.getVerticeDestino())) {				
-					arcos.add(arc);
-				}
-			}
-		}
-		return arcos.iterator();
-	}
-
-	@Override
-	public Iterator<Arco<T>> obtenerArcos(int verticeId) {
 		if(contieneVertice(verticeId)) {
-			List<Arco<T>> arcos = mapa_vertices.get(verticeId);
-				return arcos.iterator();
+			List<Arco<T>> arc = lista_vertices.get(verticeId);
+				return new iterator<T>(arc.iterator());
 		}
 		return null;
 	}
 
+	@Override
+	public Iterator<Arco<T>> obtenerArcos() {
+		List<Arco<T>> arc = new LinkedList<>();
+		for(List<Arco<T>> vert: lista_vertices.values()) {
+			arc.addAll(vert);
+		}
+		return arc.iterator();
+	}
+
+	@Override
+	public Iterator<Arco<T>> obtenerArcos(int verticeId) {
+		List<Arco<T>> arcos = new LinkedList<>();
+		if(contieneVertice(verticeId)) {
+			for(Arco<T> arc: lista_vertices.get(verticeId)) {
+				arcos.add(arc);
+			}
+		}
+		return arcos.iterator();
+	}
+	
 	public List<Integer> DFS() {
 		Map<Integer, String> colores = new HashMap<>();
-		List<Integer> blancos = new LinkedList<>(mapa_vertices.keySet());
 		List<Integer> encontrados = new LinkedList<>();
-		for (Integer vertice : blancos) {
-			colores.put(vertice, "blanco");
+		for(Integer vert : lista_vertices.keySet()) {
+			colores.put(vert, "blanco");
 		}
-		for (Integer vertice : blancos) {
-			if (colores.get(vertice).equals("blanco")) {
-				DFS_visit(vertice, colores,encontrados);
+		for(Integer indice: lista_vertices.keySet()) {
+			if(colores.get(indice).equals("blanco")) {
+				DFS_Visit(colores, indice, encontrados);
 			}
 		}
 		return encontrados;
 	}
-	public void DFS_visit(int verti, Map<Integer, String> colores, List<Integer>encontrados) {
-		colores.put(verti, "amarillo");
-		List<Arco<T>> arcos = mapa_vertices.get(verti);
-		for(Arco<T> arc: arcos) {
-			int prox = arc.getVerticeDestino();
-				if(colores.get(prox).equals("blanco")) {
-					DFS_visit(prox, colores,encontrados);
-				}else{
-					if(colores.get(prox).equals("amarillo")) {						
-							System.out.println("Hay un ciclo");
-					}
+	public void DFS_Visit(Map<Integer, String> colores, int indice, List<Integer> encontrados){
+		colores.put(indice, "amarillo");
+		
+		for(Arco<T> ady: lista_vertices.get(indice)) {
+			int prox = ady.getVerticeDestino();
+			if(colores.get(prox).equals("blanco")) {
+				DFS_Visit(colores, prox, encontrados);
+			}else {
+				if(colores.get(prox).equals("amarillo")) {
+					System.out.println("Esto es un ciclo: " + indice + " → " + prox);
 				}
+			}
 		}
-		colores.put(verti, "negro");
-		encontrados.add(verti);
+		colores.put(indice, "negro");
+		encontrados.add(indice);
 	}
-	public List<Integer> BFS() {
-		Map<Integer, Boolean> colores = new HashMap<>();
+	public List<Integer> BFS(){
+		Map<Integer, Boolean>colores = new HashMap<>();
 		List<Integer> encontrados = new LinkedList<>();
-		List<Integer> mapa_vert = new LinkedList<>(mapa_vertices.keySet());
+		List<Integer> mapa_vert = new LinkedList<>(lista_vertices.keySet());
 		boolean NO_VISITADO=false;
-		for(Integer valor: mapa_vert) {
-			colores.put(valor, NO_VISITADO);
+		for(Integer vert: mapa_vert) {
+			colores.put(vert, NO_VISITADO);
 		}
-		for(Integer valor: mapa_vert) {
-			if(colores.get(valor) == false) {
-				BFS_visit(valor, colores, encontrados);
+		for(Integer vert: mapa_vert) {
+			if(colores.get(vert)==false) {
+				BFS_Visit(colores, vert, encontrados);
 			}
 		}
 		return encontrados;
 	}
-	public void BFS_visit(int vertice, Map<Integer, Boolean> colores, List<Integer> encontrados) {
-		List<Integer> fila = new LinkedList<>();
-		boolean visitado=true;
-		colores.put(vertice,visitado);
-		fila.add(vertice);
-		while(!fila.isEmpty()) {
-			int vertX = fila.remove(0);
+	public void BFS_Visit(Map<Integer, Boolean> colores, int vertice, List<Integer> encontrados) {
+		List<Integer> lista = new LinkedList<>();
+		boolean VISITADO=true;
+		colores.put(vertice, VISITADO);
+		lista.add(vertice);
+		while(!lista.isEmpty()) {
+			int vertX = lista.remove(0);
 			encontrados.add(vertX);
-			List<Arco<T>> adyacentes = mapa_vertices.get(vertX);
-			for(Arco<T> adya: adyacentes) {
-				int prox=adya.getVerticeDestino();
+			List<Arco<T>> ady = lista_vertices.get(vertX);
+			for(Arco<T> ad: ady) {
+				int prox = ad.getVerticeDestino();
 				if(!colores.get(prox)) {
 					colores.put(prox, true);
-					fila.add(prox);
+					lista.add(prox);
 				}
 			}
 		}
 	}
 	
 	public boolean tieneAlgunCiclo() {
-		Map<Integer, String> colores = new HashMap<>();
-		List<Integer> mapa_vert = new LinkedList<>(mapa_vertices.keySet());
-		for(Integer vert: mapa_vert) {
+		Map<Integer,String> colores = new HashMap<Integer, String>();
+		boolean esCicliclo=false;
+		for(Integer vert: lista_vertices.keySet()) {
 			colores.put(vert, "blanco");
 		}
-		for(Integer vert: mapa_vert) {
+		for(Integer vert: lista_vertices.keySet()) {
 			if(colores.get(vert).equals("blanco")) {
-				if(tieneAlgunCiclo_visit(vert, colores)) {
-					return true;
-				}
+				esCicliclo=tieneAlgunCiclo_Visit(colores, vert,esCicliclo);
 			}
 		}
-		return false;
-	}
-	public boolean tieneAlgunCiclo_visit(int vert, Map<Integer, String> colores) {
-		colores.put(vert, "amarillo");
-		List<Arco<T>> arcos = mapa_vertices.get(vert);
-		for(Arco<T> arc: arcos) {
-			int prox = arc.getVerticeDestino();
-			if(colores.get(prox).equals("blanco")) {				
-				if(tieneAlgunCiclo_visit(prox, colores)) {
-					return true;
-				}
-			}else {
-				if(colores.get(prox).equals("amarillo")) {
-					return true;
-			}
-			}
-		}
-		colores.put(vert,"negro");
-		return false;
-	}
-	
-	public List<Integer> buscarElCaminoLargo(int vert1, int vert2){
-		List<Integer> caminoCompleto = new LinkedList<>();
-		if(contieneVertice(vert1)){
-			for(Arco<T> arc: mapa_vertices.get(vert1)) {
-				if(arc.getVerticeDestino()==vert2) {
-					List<Integer> camino = new LinkedList<>();
-					camino.add(vert1);
-					camino.add(vert2);
-					if(camino.size() > caminoCompleto.size()) {
-						caminoCompleto=camino;
-					}
-				}else {
-					 List<Integer> camino = buscarElCaminoLargo(arc.getVerticeDestino(), vert2);
-		                if (!camino.isEmpty()) {
-		                   camino.add(vert1);
-		                    if (camino.size() > caminoCompleto.size()) {
-		                        caminoCompleto = camino;
-		                    }
-		                }
-				}
-			}
-		}
-		return caminoCompleto;
-	}
-	HashMap<Integer, String> colores = null;
-	public boolean existeCamino(Integer origen, Integer destino) {
-		Iterator<Integer> it = this.obtenerVertices();
-		while(it.hasNext()) {
-			Integer vert = it.next();
-			colores.put(vert, "blanco");
-			
-		}
-	//Estado inicial, arranca en amarillo el origen
-		colores.put(origen, "amarillo");
-		return existeCaminoRec(origen,destino);
-	}
-	private boolean existeCaminoRec(Integer origen, Integer destino) {
-		if(origen.equals(destino)) {
-			return true;
-		}else {
-			Iterator<Integer> it = this.obtenerAdyacentes(origen);
-			while(it.hasNext()) {
-				int hijo = it.next();
-				if(colores.get(hijo).equals("blanco")) {
-					//Avanzar en el estado
-					colores.put(hijo, "amarillo");
-					boolean respuesta = existeCaminoRec(hijo,destino);
-					if(respuesta) {
-						return true;
-					}
-					//Retroceder en el estado
-					colores.put(hijo, "blanco");
-				}
-			}
-		}
-		return false;
-	}
-	public List<Integer> encontrarUnCamino(int vert1, int vert2){
-		Iterator<Integer> it = this.obtenerVertices();
-		while(it.hasNext()) {
-			int hijo = it.next();
-			colores.put(hijo, "blanco");
-		}
-		List<Integer> caminoActual = new LinkedList<>();
-		caminoActual.add(vert1);
-		colores.put(vert1, "amarillo");
+		return esCicliclo;
 		
-		return encontrarUnCaminoRec(vert1, vert2, caminoActual);
-
 	}
-	private List<Integer> encontrarUnCaminoRec(int vert1, int vert2, List<Integer> caminoActual){
-		if(vert1 == vert2) {
-			return caminoActual;
-		}else {
-			Iterator<Integer> hijos = this.obtenerAdyacentes(vert1);
-			while(hijos.hasNext()) {
-				int hijo = hijos.next();
-				if(colores.get(hijo).equals("blanco")) {
-					colores.put(hijo, "amarillo");
-					caminoActual.add(hijo);
-					List<Integer> lista = encontrarUnCaminoRec(hijo, vert2, caminoActual);
-					if(!lista.isEmpty()) {
-						return lista;
-					}
-					colores.put(hijo, "blanco");
-					caminoActual.remove(caminoActual.size()-1);
+	public boolean tieneAlgunCiclo_Visit(Map<Integer,String> colores, int vertice, boolean esCiclo) {
+		colores.put(vertice, "amarillo");
+		
+		for(Arco<T> arc: lista_vertices.get(vertice)) {
+			int prox = arc.getVerticeDestino();
+			if(colores.get(prox).equals("blanco")) {
+				esCiclo=tieneAlgunCiclo_Visit(colores, prox, esCiclo);
+			}else {				
+				if(colores.get(prox).equals("amarillo")) {
+					esCiclo=true;
 				}
 			}
 		}
-		return null;
+		return esCiclo;
 	}
-	List<List<Integer>> soluciones = new LinkedList<>();
-	public List<List<Integer>> encontrarTodosLosCaminos(int origen, int destino) {
-		List<Integer> caminoActual = new LinkedList<>();
-		Iterator<Integer> it = this.obtenerVertices();
-		while(it.hasNext()) {
-			int hijo = it.next();
-			colores.put(hijo, "blanco");
+	public List<Integer> caminoMasLargo(int verticeId1, int verticeId2){
+		List<Integer> respuesta = new LinkedList<>();
+		List<Integer> camino = new LinkedList<>();
+		if(contieneVertice(verticeId1) && contieneVertice(verticeId2)) {
+			caminoMasLargo(verticeId1, verticeId2, camino, respuesta);
 		}
-		caminoActual.add(origen);
-		colores.put(origen, "amarillo");
-		encontrarTodosLosCaminos(origen, destino, caminoActual);
-		return soluciones;
+		
+		return respuesta;
 	}
-	private void encontrarTodosLosCaminos(int origen, int destino, List<Integer> camino) {
-		if(origen == destino) {
-			soluciones.add(new LinkedList<>(camino));
-		}else {
-			Iterator<Integer> it = this.obtenerAdyacentes(origen);
-			while(it.hasNext()) {
-				int hijo = it.next();
-				if(colores.get(hijo).equals("blanco")) {
-					colores.put(hijo, "amarillo");
-					camino.add(hijo);
-					encontrarTodosLosCaminos(origen, destino, camino);
-					colores.put(hijo, "blanco");
-					camino.remove(camino.size()-1);
-				}
-			}
-		}
+	private void caminoMasLargo(int verticeId1, int verticeId2, List<Integer>camino, List<Integer> respuesta){
+		 camino.add(verticeId1);
+		 if(verticeId1==verticeId2) {
+		       if (camino.size() > respuesta.size()) {
+		            respuesta.clear();
+		            respuesta.addAll(new LinkedList<>(camino));
+		     }
+		 }else {
+			 List<Arco<T>> arc = lista_vertices.get(verticeId1);
+			 for(Arco<T> arcos: arc) {
+				 int prox = arcos.getVerticeDestino();
+				 caminoMasLargo(prox, verticeId2, camino, respuesta);
+			 }
+		 }
+		 camino.remove(camino.size()-1);
 	}
-	public List<Integer> buscarCaminoCorto(int vert1, int vert2){
-		List<Integer> caminoCorto = new LinkedList<>();
-		if(contieneVertice(vert1)) {
-			for(Arco<T> arc: mapa_vertices.get(vert1)) {
-				if(arc.getVerticeDestino() == vert2) {
-					List<Integer> caminoC= new LinkedList<>();
-					caminoC.add(vert1);
-					caminoC.add(vert2);
-					if(caminoCorto.isEmpty() || caminoC.size() < caminoCorto.size()) {
-						caminoCorto = caminoC;
-					}
-				}else {
-					List<Integer> caminoC = buscarCaminoCorto(arc.getVerticeDestino(), vert2);
-					if(!caminoC.isEmpty()) {						
-						caminoC.add(vert1);
-						if(caminoCorto.isEmpty() || caminoC.size() < caminoCorto.size()) {
-							caminoCorto = caminoC;
-						}
-					}
-				}
-			}
-		}
-		return caminoCorto;
-	}
-	public List<Integer> caminoQueTerminaEn(int vert1) {
-	    return caminoQueTerminaEn(vert1, new LinkedList<>());
-	}
-	private List<Integer> caminoQueTerminaEn(int vert1, List<Integer> visitados){
-		List<Integer> lista = new LinkedList<>();
-		if(contieneVertice(vert1)) {
-		for(Integer val: mapa_vertices.keySet()) {
-			for(Arco<T> arc: mapa_vertices.get(val)) {
-				if(arc.getVerticeDestino() ==vert1) {
-						List<Integer> camino = new LinkedList<>();
-						if(!camino.contains(val)) {
-						camino.add(val);
-						}
-						visitados.add(val);
-						lista.addAll(camino);
-					}else {
-						if(!visitados.contains(val)) {
-							List<Integer> camino = caminoQueTerminaEn(arc.getVerticeDestino(), visitados);
-							if(!camino.isEmpty()) {
-								visitados.add(val);
-								if(!camino.contains(val)) {
-									camino.add(val);
-									}
-								lista.addAll(camino);
-							}
-						}
-					}
-				}
-			}
-		}
-		return lista;	
-	}
-	public int contarArcosSalientes(int verticeId) {
-		if(contieneVertice(verticeId)) {
-			List<Arco<T>> arcos = mapa_vertices.get(verticeId);
-			return arcos.size();
-		}
-		return 0;
-	}
-	public List<Integer> obtenerArcosDestinos(int verticeId){
-		List<Integer> arcosDestinos = new LinkedList<>();
-		if(contieneVertice(verticeId)) {
-			List<Arco<T>> arcos = mapa_vertices.get(verticeId);
-			for(Arco<T> arc: arcos) {
-					arcosDestinos.add(arc.getVerticeDestino());
-				}
-		}
-		return arcosDestinos;
-	}
-	public T obtenerPesoArco(int verticeId1, int verticeId2) {
-		if(contieneVertice(verticeId1)) {
-			List<Arco<T>> arcos = mapa_vertices.get(verticeId1);
-			for(Arco<T> arc: arcos) {
-				if(arc.getVerticeDestino()==verticeId2) {
-					return arc.getEtiqueta();
-				}
-			}
-		}
-		return null;
-	}
-	public boolean esVerticeAislado(int verticeId) {
-		if(contieneVertice(verticeId)) {
-			for(Integer vert: mapa_vertices.keySet()) {
-				List<Arco<T>> arco = mapa_vertices.get(verticeId);
-				List<Arco<T>> arcos = mapa_vertices.get(vert);
-				for(Arco<T> arc: arcos) {
-					if(arc.getVerticeDestino() == verticeId) {
-						return false;
-					}else {
-						if(arcos.get(verticeId).getVerticeDestino() == -1) {
-							return true;
-						}
-					}//SEGUIR
-				}
-			}
-		}
-		return false;
-	}
-
-
 }

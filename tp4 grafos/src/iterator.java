@@ -1,12 +1,12 @@
 import java.util.Iterator;
 
-public class IteratorArco<T> implements Iterator<Integer>{
+public class iterator<T> implements Iterator<Integer> {
 
 	private Iterator<Arco<T>> iterator;
-	
-	public IteratorArco(Iterator<Arco<T>> it) {
-		iterator = it;
+	public iterator(Iterator<Arco<T>> iterator2) {
+		iterator = iterator2;
 	}
+
 	@Override
 	public boolean hasNext() {
 		return iterator.hasNext();
