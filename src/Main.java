@@ -1,4 +1,3 @@
-import java.util.Iterator;
 
 public class Main{
 	public static void main(String[]args) {
@@ -10,16 +9,15 @@ public class Main{
 		Lista.insertFront(30); 
 		Lista.insertFront(20);
 		Lista.insertFront(40); 
-		//40->20->30->20;
-		//System.out.println(Lista.get(1));
-		//System.out.println(Lista.isEmpty());
-		//System.out.println("El elemento extraído de la lista es: "+ Lista.extractFront());
-		//System.out.println("Tamaño: " + Lista.size());
-		//System.out.println("Elementos: "+ Lista.get(0));
-		//System.out.println(Lista.indexOf(40));
-		//Lista.insertLast(25);
-		Lista.eliminar(10);
-		Lista.eliminarUltimo();
-		System.out.println(Lista.get(10));
+		//40->20->30->25->10
+		Lista.insertBack(45);
+		Lista.insertBack(55);
+		//40->20->30->25->10->45->55
+	//	Lista.insertAt(2, 15);
+		//40->20->15->30->25->10->45->55
+		System.out.println(Lista.removeAt(3));
+		System.out.println(Lista.size());
+		System.out.println(Lista.indexOf(10));
+		System.out.println(Lista.estaT(10));
 	}
 }

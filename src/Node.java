@@ -15,15 +15,12 @@ public class Node<T> {
 		this.setNext(next);
 		this.setPrev(prev);
 	}
-	
-	public Node<T> getPrev() {
+	public Node<T> getPrev(){
 		return prev;
 	}
-
-	public void setPrev(Node<T> prev) {
-		this.prev = prev;
+	public void setPrev(Node<T> prevs){
+		this.prev = prevs;
 	}
-
 	public Node<T> getNext() {
 		return next;
 	}

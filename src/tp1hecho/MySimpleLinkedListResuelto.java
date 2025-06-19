@@ -1,3 +1,5 @@
+package tp1hecho;
+
 import java.util.Iterator;
 
 public class MySimpleLinkedListResuelto<T extends Comparable<T>> implements Iterable<T>{

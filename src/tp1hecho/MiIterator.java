@@ -1,3 +1,5 @@
+package tp1hecho;
+
 import java.util.Iterator;
 
 public class MiIterator<T> implements Iterator<T>{

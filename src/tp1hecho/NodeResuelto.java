@@ -1,3 +1,4 @@
+package tp1hecho;
 
 public class NodeResuelto<T> {
 
