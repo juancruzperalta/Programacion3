@@ -18,7 +18,8 @@ public class Main{
 		//System.out.println("Elementos: "+ Lista.get(0));
 		//System.out.println(Lista.indexOf(40));
 		//Lista.insertLast(25);
+		Lista.eliminar(10);
 		Lista.eliminarUltimo();
-		System.out.println(Lista.mostrarUltimoElemento());
+		System.out.println(Lista.get(10));
 	}
 }

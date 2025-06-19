@@ -37,6 +37,93 @@ public class MySimpleLinkedList<T> {
 	public T mostrarUltimoElemento() {
 		return this.last.getInfo();
 	}
+	public void insertarLast(T valor) {
+		Node<T> nuevo = new Node<>(valor, null,null);
+		if(this.first!=null) {
+			if(this.last!= null) {
+				nuevo.setPrev(this.last);
+				this.last.setNext(nuevo);
+				this.last = nuevo;
+				size++;
+				}
+			}//Obviamente cuando se crea el insertFront agrega el primer elem creado como LAST.
+			else {
+			this.last = nuevo;
+			this.first = nuevo;
+		}
+	}
+	
+	public int nodosEnreLastYFirst() {
+		int size=0;
+		if(this.first != null && this.last!=null) {
+			Node<T> cursor = this.last;
+			while(cursor.getPrev() != null) {
+				size++;
+				cursor = cursor.getPrev();
+				if(cursor==this.first) {
+					return size;
+				}
+			}
+		}
+		return -1;
+	}
+	public void insertarNodoAntes() {
+		if(this.first != null) {
+			int nodoX =0;
+			Node<T> cursor = this.first;
+			while(cursor != null) {
+				Node<T> nuevoNodo = new Node<>(nodoX, null, null);
+				Node<T> cursorSig = cursor.getNext();
+				if(cursor == this.first &&cursor.getInfo().intValue()%2!=0) {
+					this.first = nuevoNodo;
+					this.first.setNext(cursor);
+					cursor.setPrev(this.first);
+				}
+				if (cursorSig != null && cursorSig.getInfo().intValue() % 2 != 0) {
+					cursor.setNext(nuevoNodo);
+					nuevoNodo.setNext(cursorSig);
+					nuevoNodo.setPrev(cursor);
+					cursorSig.setPrev(nuevoNodo);
+					cursor= cursor.getNext();
+				}else {
+					cursor = cursor.getNext();
+				}
+			}
+		}
+	}
+	public void Duplicar() {
+		if(this.first != null) {			
+		Node<T> cursor = this.first;
+			while(cursor.getNext() != null) {
+			 Node<T> duplicado = new Node<>(cursor.getInfo(), null, null);
+			 cursor.setNext(duplicado);
+			 duplicado.setPrev(cursor);
+			 cursor = cursor.getNext().getNext();
+			}
+		}
+	}
+	public void eliminar(T valor) {
+		if(this.first!=null) {
+			Node<T> cursor = this.first;
+			int i=0;
+			while(i < size && cursor.getNext()!=null) {
+				if(cursor.getInfo()==valor) {
+					if(cursor.getNext() != null)
+					cursor = cursor.getNext();
+					else if(cursor.getPrev() != null){
+						cursor = cursor.getPrev();
+						cursor.setNext(null);
+					}else {
+						cursor = null;
+					}
+				}
+				else {
+					i++;
+					cursor = cursor.getNext();
+				}
+			}
+		}
+	}
 	//O(n)
 	public T extractFront() {		
 		Node<T> cursor = this.first;
