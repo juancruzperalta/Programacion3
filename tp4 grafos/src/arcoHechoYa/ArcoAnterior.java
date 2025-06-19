@@ -29,4 +29,10 @@ public class ArcoAnterior<T> {
 		return etiqueta;
 	}
 
+	@Override
+	public String toString() {
+		return "ArcoAnterior [verticeOrigen=" + verticeOrigen + ", verticeDestino=" + verticeDestino + ", etiqueta="
+				+ etiqueta + "]";
+	}
+	
 }

@@ -261,4 +261,119 @@ public class GrafoDirigido<T> implements Grafo<T> {
 		 }
 		 camino.remove(camino.size()-1);
 	}
+	
+	public List<Integer> conjVertices(int vertV){
+		List<Integer> alcanzados = new LinkedList<>();
+		List<Integer> visitados = new LinkedList<>();
+		
+		conjVertices(vertV, alcanzados, visitados);
+		
+		return alcanzados;
+	}
+	private void conjVertices(int vertV, List<Integer> alcanzados, List<Integer> visitados) {
+		visitados.add(vertV);
+		List<Arco<T>> adya = lista_vertices.get(vertV);
+		for(Arco<T> ad: adya) {
+			int prox = ad.getVerticeDestino();
+			if(!visitados.contains(prox)) {
+				alcanzados.add(prox);
+			}
+		}
+	}
+	
+	public boolean existeCamino(int u, int v) {
+		if(hayCamino(u, v)) {
+			return true;
+		}
+		return false;
+	}
+	public boolean hayCamino(int u, int v) {
+		List<Integer> visitados = new LinkedList<>();
+		visitados.add(u);
+		if(u==v) {
+			return true;
+		}else {
+			List<Arco<T>> adya = lista_vertices.get(u);
+			for(Arco<T> ad: adya) {
+				int ady = ad.getVerticeDestino();
+				if(!visitados.contains(ady)) {
+					
+				if(hayCamino(ady, v)) {
+						return true;
+					}
+				}
+			}
+			}
+		return false;
+	}
+	List<Integer> caminoTotal = new LinkedList<>();
+	public List<Integer> caminoCiclico(){
+		List<Integer> camino = new LinkedList<>();
+		Map<Integer, String> colores = new HashMap<>();
+		for(Integer vert: lista_vertices.keySet()) {
+			colores.put(vert, "blanco");
+		}
+		for(Integer vert: lista_vertices.keySet()) {
+			if(colores.get(vert).equals("blanco")) {
+				caminoCiclicoVisit(vert, camino, colores);
+			}
+		}
+		return caminoTotal;
+	}
+	private void caminoCiclicoVisit(int vert, List<Integer> camino, Map<Integer, String> colores) {
+		colores.put(vert,"amarillo");	
+		camino.add(vert);
+		List<Arco<T>> adya = lista_vertices.get(vert);
+		for(Arco<T> ad: adya) {
+			int vertProx = ad.getVerticeDestino();
+			if(colores.get(vertProx).equals("blanco")) {
+				caminoCiclicoVisit(vertProx, camino, colores);
+			}else if (colores.get(vertProx).equals("amarillo")) {
+			    // Reconstruimos el ciclo desde vertProx hasta el actual
+			    int i = camino.indexOf(vertProx);
+			    if (i != -1) {
+			        caminoTotal.addAll(camino.subList(i, camino.size()));
+			        caminoTotal.add(vertProx); // cerrar el ciclo
+			        return;
+			    }
+			}
+		}
+		colores.put(vert, "negro");
+		camino.remove(camino.size() - 1);
+	}
+	
+	public boolean esPartedelCiclo(int v) {
+		Map<Integer, String> colores = new HashMap<>();
+		for(Integer vert: lista_vertices.keySet()) {
+			colores.put(vert,"blanco");
+		}
+		for(Integer vert: lista_vertices.keySet()) {
+			if(colores.get(vert).equals("blanco")) {
+				if(esParteCicloVisit(vert, v, colores)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	public boolean esParteCicloVisit(int vert, int v, Map<Integer, String>colores) {
+		colores.put(vert,"amarillo");
+		List<Arco<T>> adyac = lista_vertices.get(vert);
+		for(Arco<T> ady : adyac) {
+			int adProx = ady.getVerticeDestino();
+			if(colores.get(adProx).equals("blanco")) {
+				if(esParteCicloVisit(adProx, v, colores)) {
+					return true;
+				}
+			}else {
+				if(colores.get(adProx).equals("amarillo")) {
+					if(adProx==v) {
+						return true;
+					}
+				}
+			}
+		}
+		colores.put(vert,"negro");
+		return false;
+	}
 }

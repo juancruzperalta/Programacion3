@@ -21,6 +21,8 @@ public class Main {
 		grafito.agregarArco(3, 4, 1F);
 		grafito.agregarArco(4, 2, 2F);
 		grafito.agregarArco(4, 5, 2F);
+		System.out.println("tiene vertice" + grafito.contieneVertice(12));
+		System.out.println(grafito.obtenerArco(1, 2));
 		//grafito.borrarArco(1, 3);
 		//grafito.borrarVertice(1);
 		// Obtengo el arco entre 1 y 2, y le pido la etiqueta

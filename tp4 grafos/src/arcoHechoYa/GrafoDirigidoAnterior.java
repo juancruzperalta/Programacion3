@@ -65,10 +65,17 @@ public class GrafoDirigidoAnterior<T> implements GrafoAnterior<T> {
 	}
 
 	@Override
-	public boolean contieneVertice(int verticeId) {
-		return mapa_vertices.containsKey(verticeId);
+//	public boolean contieneVertice(int verticeId) {
+	//	return mapa_vertices.containsKey(verticeId);
+	//}
+public boolean contieneVertice(int vertId) {
+		for(Integer vert: mapa_vertices.keySet()) {
+			if(vert==vertId) {
+				return true;
+			}
+		}
+		return false;
 	}
-
 	@Override
 	public boolean existeArco(int verticeId1, int verticeId2) {
 		if(contieneVertice(verticeId1)) {

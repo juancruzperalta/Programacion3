@@ -15,40 +15,39 @@ public class Main {
 		grafito.agregarVertice(5);
 		// Genero un arco desde 1 hasta 2 con el valor de etiqueta 3
 		grafito.agregarArco(1, 2, 3F);
+		grafito.agregarArco(2, 1, 3F);
 		grafito.agregarArco(1, 3, 5F);
 		grafito.agregarArco(3, 4, 1F);
 		grafito.agregarArco(4, 5, 3F);
 		grafito.agregarArco(5, 2, 1F);
-		//System.out.println("La cantidad de vertices del grafito es: "+grafito.cantidadVertices());
-		//System.out.println("La cantidad de arcos son: "+ grafito.cantidadArcos());
-		/*Iterator<Integer> it = grafito.obtenerVertices();
-		while(it.hasNext()) {
-			System.out.println("Vertice " + it.next());
-		}
-		
-		Iterator<Integer> ady = grafito.obtenerAdyacentes(1);
-		while(ady.hasNext()) {
-			System.out.println("Adyacentes: " + ady.next());
-		}
-		Iterator<Arco<Float>> arc = grafito.obtenerArcos();
-		while(arc.hasNext()) {
-			Arco<Float> arco = arc.next();
-			System.out.println(arco.getVerticeOrigen() + " Origen | Destino " + arco.getVerticeDestino());
-		}
-		Iterator<Arco<Float>> arcos = grafito.obtenerArcos(1);
-		while(arcos.hasNext()) {
-			Arco<Float> arc = arcos.next();
-			System.out.println(arc.getVerticeOrigen() + " Origen | Destino " + arc.getVerticeDestino());
-		}
-		grafito.borrarArco(1, 2);
+		//System.out.println(grafito.caminoCiclico());
+		System.out.println(grafito.esPartedelCiclo(2));
+		/*🔹 Ejercicio 9
+Escriba un algoritmo que detecte fuentes y sumideros en un grafo dirigido:
 
-		grafito.borrarVertice(1);
-		
-		*/
-		//System.out.println("DFS en grafo " + grafito.DFS());
-		//System.out.println("BFS en grafo "+ grafito.BFS());
-		//System.out.println(grafito.tieneAlgunCiclo());
-		System.out.println("El camino más largo es " + grafito.caminoMasLargo(1, 2));
+Fuente: vértice con grado de entrada 0.
+
+Sumidero: vértice con grado de salida 0.
+
+🔹 Ejercicio 10
+Dado un grafo dirigido y un vértice v, determine si v es parte de algún ciclo del grafo.
+
+🔹 Ejercicio 11
+Implemente un algoritmo que, dado un grafo dirigido acíclico (DAG), devuelva una ordenación topológica de sus vértices.
+
+🔹 Ejercicio 12
+Dado un grafo dirigido, determine si todos los vértices son alcanzables desde un único vértice origen.
+
+🔹 Ejercicio 13
+Implemente un algoritmo que devuelva el camino más corto (menor cantidad de arcos) entre dos vértices en un grafo sin pesos.
+(Sugerencia: BFS)
+
+🔹 Ejercicio 14
+Escriba una función que determine si eliminando un vértice v de un grafo dirigido, se desconecta algún par de vértices que antes estaban conectados.
+
+🔹 Ejercicio 15
+Dado un grafo dirigido, devuelva la cantidad de componentes fuertemente conexas (SCCs).
+(Si querés más desafío, hacelo usando Kosaraju o Tarjan, pero también podés resolverlo con DFS + transpuesta)*/
 	}
 
 }
