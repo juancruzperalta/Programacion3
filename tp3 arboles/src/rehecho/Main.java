@@ -13,5 +13,11 @@ public class Main {
 		t.add(9);
 		
 		System.out.println(t.isEmpty());
+		System.out.println(t.hasElem(7));
+		System.out.println(t.getHeight());
+		System.out.println(t.getLongestBranch());
+		System.out.println(t.getFrontera());
+		System.out.println(t.getMaxElem());
+		System.out.println(t.getElemAtLevel(0));
 	}
 }
