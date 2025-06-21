@@ -195,4 +195,29 @@ public class Tree {
 		}
 		return valIzq+valDer;
 	}
+	
+	public List<Integer> hojasSupereAK(int K){
+		if(this.root != null) {
+			return hojasSupereAK(this.root, K);
+		}
+		return null;
+	}
+	private List<Integer> hojasSupereAK(TreeNode node, int k){
+		if(node==null)return null;
+		List<Integer> listaIzq = new LinkedList<>(), listaDer = new LinkedList<>();
+		List<Integer> total = new LinkedList<>();
+		boolean esHoja = node.getLeft() == null && node.getRight() == null;
+		if(node.getLeft() != null) {
+			listaIzq = hojasSupereAK(node.getLeft(), k);
+		}
+		if(node.getRight() != null) {
+			listaDer = hojasSupereAK(node.getRight(), k);
+		}
+		if(node.getValue() > k && esHoja) {
+			listaIzq.add(node.getValue());
+		}
+		total.addAll(listaIzq);
+		total.addAll(listaDer);
+		return total;
+	}
 }

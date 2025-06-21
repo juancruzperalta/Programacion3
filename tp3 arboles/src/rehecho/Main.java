@@ -20,5 +20,6 @@ public class Main {
 		System.out.println(t.getMaxElem());
 		System.out.println(t.getElemAtLevel(0));*/
 		System.out.println(t.sumaDeNodosInternos());
+		System.out.println(t.hojasSupereAK(0));
 	}
 }
