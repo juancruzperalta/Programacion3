@@ -172,4 +172,27 @@ public class Tree {
 		total.addAll(listaDer);
 		return total;
 	}
+	
+	public int sumaDeNodosInternos() {
+		if(this.root!=null) {
+			return sumaDeNodosInternos(this.root);
+		}
+		return 0;
+	}
+	private int sumaDeNodosInternos(TreeNode node) {
+		if(node == null) return 0;
+		boolean esHoja = node.getLeft() ==null && node.getRight()==null;
+		int valIzq=0, valDer=0;
+
+		if(node.getLeft()!=null) {
+			valIzq = sumaDeNodosInternos(node.getLeft());
+		}
+		if(node.getRight() != null) {
+			valDer = sumaDeNodosInternos(node.getRight());
+		}
+		if(!esHoja) {
+			return node.getValue()+valIzq+valDer;
+		}
+		return valIzq+valDer;
+	}
 }
