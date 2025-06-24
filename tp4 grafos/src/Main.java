@@ -18,7 +18,6 @@ public class Main {
 		
 		System.out.println(etiqueta); // Deber�a imprimir 3
 		System.out.println(grafito.cantidadVertices());
-
 		System.out.println(grafito.cantidadArcos());
 	}
 

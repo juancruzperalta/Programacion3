@@ -19,8 +19,16 @@ public class GrafoDirigido<T> implements Grafo<T> {
 
 	@Override
 	public void borrarVertice(int verticeId) {
-		// TODO Auto-generated method stub
-	}
+		if(contieneVertice(verticeId)) {
+			List<Arco<T>> arc = mapa_vertices.get(verticeId);
+			for(Arco<T> ar : arc) {
+				int prox = ar.getVerticeDestino();
+				borrarArco(verticeId, prox);
+				borrarArco(prox, verticeId);
+				}
+			}
+		mapa_vertices.remove(verticeId);
+		}
 
 	@Override
 	public void agregarArco(int verticeId1, int verticeId2, T etiqueta) {
@@ -95,26 +103,86 @@ public class GrafoDirigido<T> implements Grafo<T> {
 
 	@Override
 	public Iterator<Integer> obtenerVertices() {
-		// TODO Auto-generated method stub
-		return null;
+		return mapa_vertices.keySet().iterator();
 	}
 
 	@Override
 	public Iterator<Integer> obtenerAdyacentes(int verticeId) {
-		// TODO Auto-generated method stub
-		return null;
+		List<Arco<T>> arc = mapa_vertices.get(verticeId);
+		return new Iterators<>(arc.iterator());
 	}
 
 	@Override
 	public Iterator<Arco<T>> obtenerArcos() {
-		// TODO Auto-generated method stub
+		for(Integer vert : mapa_vertices.keySet()) {
+			List<Arco<T>> arc = mapa_vertices.get(vert);
+			return arc.iterator();
+		}
 		return null;
 	}
 
 	@Override
 	public Iterator<Arco<T>> obtenerArcos(int verticeId) {
-		// TODO Auto-generated method stub
-		return null;
+		List<Arco<T>> arc = mapa_vertices.get(verticeId);
+		return arc.iterator();
 	}
-
+	public void DFS() {
+		Hashtable<Integer, String> colores = new Hashtable<>();
+		
+		for(Integer vert : mapa_vertices.keySet()) {
+			colores.put(vert, "blanco");
+		}
+		for(Integer vert : mapa_vertices.keySet()) {
+			if(colores.get(vert).equals("blanco")) {
+				DFS_Visit(colores,vert);
+			}
+		}
+	}
+	private void DFS_Visit(Hashtable<Integer, String> colo, int vert ) {
+		colo.put(vert,"amarillo");
+		
+		List<Arco<T>> vec = mapa_vertices.get(vert);
+		for(Arco<T> ady : vec) {
+			int vertProx = ady.getVerticeDestino();
+			if(colo.get(vertProx).equals("blanco")) {
+				DFS_Visit(colo, vertProx);
+			}
+			else {
+				if(colo.get(vertProx).equals("amarillo")) {
+					System.out.println("ciclo");
+				}
+					}
+		}
+		colo.put(vert, "negro");
+	}
+	List<Integer> fila;
+	public void BFS() {
+		fila.clear();
+		Hashtable<Integer, Boolean> visitados = new Hashtable<>();
+		for(Integer vert: mapa_vertices.keySet()) {
+			visitados.put(vert, false);
+		}
+		for(Integer vert : mapa_vertices.keySet()) {
+			if(visitados.get(vert).equals(false)) {
+				BFS_Visit(visitados, vert);
+			}
+		}
+	}
+	private void BFS_Visit(Hashtable<Integer, Boolean> visitados, int vert) {
+		visitados.put(vert, true);
+		fila.add(vert);
+		while(!fila.isEmpty()) {
+			int prim = fila.remove(0);
+			List<Arco<T>> arc = mapa_vertices.get(prim);
+			for(Arco<T> ady: arc) {
+				int prox = ady.getVerticeDestino();
+				if(visitados.get(prox).equals(false)) {
+					BFS_Visit(visitados, prox);
+				}else {
+					visitados.put(prox, true);
+					fila.add(prox);
+				}
+			}
+		}
+	}
 }
