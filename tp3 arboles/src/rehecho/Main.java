@@ -18,8 +18,13 @@ public class Main {
 		System.out.println(t.getLongestBranch());
 		System.out.println(t.getFrontera());
 		System.out.println(t.getMaxElem());
-		System.out.println(t.getElemAtLevel(0));*/
 		System.out.println(t.sumaDeNodosInternos());
 		System.out.println(t.hojasSupereAK(0));
+		System.out.println(t.arbolMultiploK(2));
+		System.out.println(t.sumaNodosHojasNivelesPares());
+		System.out.println(t.getElemAtLevel(0));*/
+		System.out.println(t.promedioHojas());
+		System.out.println(t.getValoresEnRango(4, 6));
+		System.out.println(t.getDiametro());
 	}
 }
