@@ -185,4 +185,127 @@ public class GrafoDirigido<T> implements Grafo<T> {
 			}
 		}
 	}
+	public boolean tenesAlgunCiclo() {
+		Hashtable<Integer, String> colores = new Hashtable<>();
+		boolean tenesCiclo=false;
+		for(Integer vert : mapa_vertices.keySet()) {
+			colores.put(vert, "blanco");
+		}
+		for(Integer vert : mapa_vertices.keySet()) {
+			if(colores.get(vert).equals("blanco")) {
+				if(tenesAlgunCicloVisit(vert, colores)) {
+					tenesCiclo=true;
+				}
+			}
+		}
+		return tenesCiclo;
+	}
+	private boolean tenesAlgunCicloVisit(int vert, Hashtable<Integer,String> colores) {
+		colores.put(vert, "amarillo");
+		
+		List<Arco<T>> adya = mapa_vertices.get(vert);
+		for(Arco<T> ady: adya) {
+			int vertProx = ady.getVerticeDestino();
+			if(colores.get(vertProx).equals("blanco")) {
+				return tenesAlgunCicloVisit(vertProx, colores);
+			}else {
+				if(colores.get(vertProx).equals("amarillo")) {
+					return true;
+				}
+			}
+		}
+		colores.put(vert, "negro");
+		return false;
+	}
+	List<Integer> caminoMayor = new LinkedList<>();
+	List<Integer> visitados = new LinkedList<>();
+	public List<Integer> caminoSimple(int i, int j){
+		List<Integer> camino = new LinkedList<>();
+		caminoMayor.clear();
+		visitados.clear();
+		camino.add(i);
+		visitados.add(i);
+		caminoSimple(i, j, camino);
+		return caminoMayor;
+	}
+	private void caminoSimple(int i, int j, List<Integer> camino){
+		if(i==j) {
+			if(camino.size() > caminoMayor.size()) {
+				caminoMayor.clear();
+				caminoMayor.addAll(new LinkedList<>(camino));
+			}
+		}else {
+			Iterator<Integer> it = this.obtenerAdyacentes(i);
+			while(it.hasNext()) {
+				int prox = it.next();
+				if(!visitados.contains(prox)) {
+					camino.add(prox);
+					visitados.add(prox);
+					caminoSimple(prox, j, camino);
+					camino.remove(camino.size() - 1);
+					visitados.remove(visitados.size() - 1);
+				}
+			}
+		}
+	}
+	public boolean hayCicloDesde(Integer vert) {
+		Hashtable<Integer, String> colores = new Hashtable<>();
+		
+		for(Integer v : mapa_vertices.keySet()) {
+			colores.put(v, "blanco");
+		}
+		colores.put(vert, "blanco");
+		if(hayCicloDesde(vert, colores, vert)) {
+			return true;
+		}
+		return false;
+	}
+	private boolean hayCicloDesde(Integer vert, Hashtable<Integer, String> colores, int original) {
+		colores.put(vert, "amarillo");
+		
+		List<Arco<T>> arc = mapa_vertices.get(vert);
+		for(Arco<T> ady: arc) {
+			int prox = ady.getVerticeDestino();
+			if(colores.get(prox).equals("blanco")) {
+				if( hayCicloDesde(prox, colores,original)){
+				return true;
+				}
+			}
+			else {
+				if(colores.get(prox).equals("amarillo")) {
+					if(prox==original) {
+						return true;
+					}
+				}
+			}
+		}
+		colores.put(vert, "negro");
+		return false;
+	}
+	
+	public boolean hayCamino(int origen, int destino) {
+		List<Integer> visitados = new LinkedList<>();
+		
+		visitados.add(origen);
+		return hayCamino2(origen, destino, visitados);
+		
+	}
+	private boolean hayCamino2(int origen, int destino, List<Integer> visitados) {
+		if(origen==destino) {
+			return true;
+		}
+		Iterator<Integer>it = this.obtenerAdyacentes(origen);
+		while(it.hasNext()) {
+			int prox = it.next();
+			if(!visitados.contains(prox)) {
+				visitados.add(prox);
+				boolean visita = hayCamino2(prox, destino, visitados);
+				if(visita) {
+					return visita;
+				}
+				visitados.remove((Integer) prox);
+			}
+		}
+		return false;
+	}
 }
