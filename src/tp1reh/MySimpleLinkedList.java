@@ -2,18 +2,24 @@ package tp1reh;
 
 public class MySimpleLinkedList<T> {
 	
-	private Node<T> first;
+	private Node<T> first, last;
 	private int size;
 	public MySimpleLinkedList() {
 		this.first = null;
+		this.last = null;
 		this.size = 0;
 	}
 	
 	public void insertFront(T info) {
-		Node<T> tmp = new Node<T>(info,null);
-		tmp.setNext(this.first);
+		Node<T> tmp = new Node<T>(info,null,null);
+		if(this.first==null) {
+			this.last = tmp;
+		}else {
+			tmp.setNext(this.first);
+			this.first.setPrev(tmp);	
+		}
 		this.first = tmp;
-		size++;
+		this.size++;
 	}
 	//10->20->30
 	public T extractFront() {		
@@ -38,7 +44,7 @@ public class MySimpleLinkedList<T> {
 		Node<T> tmp = this.first;
 		int value=0;
 		if(this.first!=null) {
-			while(tmp.getNext()!=null) {
+			while(tmp!=null) {
 				if(value==index) {
 					return tmp.getInfo();
 				}
@@ -63,7 +69,7 @@ public class MySimpleLinkedList<T> {
 		if(this.first!=null) {
 			int posicion=0;
 			Node<T> tmp = this.first;
-			while(tmp.getNext()!=null) {
+			while(tmp!=null) {
 				if(tmp.getInfo() == elemento) {
 					return posicion;
 				}
@@ -72,5 +78,87 @@ public class MySimpleLinkedList<T> {
 			}
 		}
 		return -1;
+	}
+	
+	public void insertBack(T elemento) {
+		if(this.last!=null) {
+			Node<T> tmp = new Node<T>(elemento, null, null);
+			tmp.setPrev(this.last);
+			this.last.setNext(tmp);
+			this.last = tmp;
+			size++;
+		}else {			
+		insertFront(elemento);
+		}
+	}
+	public T extractBack() {
+		if(this.last!=null) {
+			Node<T> tmp = this.last;
+			if(this.last.getPrev()!=null) {
+				this.last = this.last.getPrev();
+				this.last.setNext(null);
+				size--;
+			}
+			return tmp.getInfo();
+		}
+		return null;
+	}
+	public boolean constains(T element) {
+		if(this.first != null) {
+			Node<T> cursor = this.first;
+			while(cursor!=null) {
+				if(cursor.getInfo()==element) {
+					return true;
+				}
+				cursor = cursor.getNext();
+			}
+		}
+		return false;
+	}
+	public void insertAt(int index, T element) {
+		if(this.first!=null) {
+			int value=0;
+			Node<T> cursor = this.first;
+			while(cursor != null) {
+				if(value==index) {
+					Node<T> tmpNuevo = new Node<T>(element, null,null);
+					cursor.getPrev().setNext(tmpNuevo);
+					cursor.setNext(cursor.getNext());
+					tmpNuevo.setNext(cursor);
+					cursor.setPrev(tmpNuevo);
+					size++;
+				}
+				cursor = cursor.getNext();
+				value++;
+			}
+		}
+	}
+	
+	public T remoteAt(int index) {
+		if(this.first!=null) {
+			Node<T> cursor = this.first;
+			int value=0;
+			while(cursor != null) {
+				if(value==index) {
+					Node<T> anterior = cursor.getPrev();
+					Node<T> despues = cursor.getNext();
+					if(anterior!=null) {
+						anterior.setNext(despues);
+					}else {
+						this.first = despues;
+					}
+					if(despues!=null) {
+						despues.setPrev(anterior);
+					}else {
+						this.last = anterior;
+					}
+					size--;
+					return cursor.getInfo();
+				}
+				value++;
+				cursor=cursor.getNext();
+			}
+		}
+		return null;
 	}
 }

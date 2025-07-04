@@ -11,6 +11,9 @@ public class Main{
 		Lista.insertFront(20);
 		Lista.insertFront(40); 
 		//40->20->30->25->10
-		System.out.println(Lista.getElemento(20));
+		Lista.insertAt(2, 35);
+		//40->20->35->30->25->10
+		System.out.println(Lista.getElemento(35));
+		System.out.println(Lista.remoteAt(2));
 	}
 }
