@@ -1,20 +1,21 @@
-import java.util.Iterator;
-
+import java.util.*;
 
 public class Iterators<T> implements  Iterator<Integer>{
 
-	private Iterator<Arco<T>> iterator;
-	
-	public Iterators(Iterator<Arco<T>> it) {
-		iterator = it;
+	private Iterator<Arco<T>> arcoIterator;
+
+	public Iterators(List<Arco<T>> arcos) {
+		this.arcoIterator = arcos.iterator();
 	}
+
 	@Override
 	public boolean hasNext() {
-		return iterator.hasNext();
+		return arcoIterator.hasNext();
 	}
 
 	@Override
 	public Integer next() {
-		return iterator.next().getVerticeDestino();
+		return arcoIterator.next().getVerticeDestino();
 	}
+	
 }

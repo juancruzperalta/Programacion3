@@ -10,12 +10,8 @@ public class Main {
 		t.add(4);
 		t.add(7);
 		t.add(9);
-		
-		System.out.println(t.hasElem(9));
-		System.out.println(t.getHeight());
-		System.out.println(t.getLongestBranch());
-		System.out.println(t.getFrontera());
-		System.out.println(t.getMaxElem());
-		System.out.println(t.getElemAtNivel(1));
+		//System.out.println(t.caminosHastaHojas());
+		System.out.println(t.sumaNodos(6));
+		System.out.println(t.profundidadDelNodo(5));
 	}
 }

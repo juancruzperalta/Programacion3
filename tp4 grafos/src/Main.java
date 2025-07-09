@@ -3,29 +3,25 @@ public class Main {
 
 	public static void main(String[] args) {
 
+		// Creo un grafo dirigdo donde las etiquetas de los arcos son valores Float
 		GrafoDirigido<Float> grafito = new GrafoDirigido<>();
 		
+		// Agrego los vertices 1 y 2
 		grafito.agregarVertice(1);
 		grafito.agregarVertice(2);
-		grafito.agregarVertice(3);
-		grafito.agregarVertice(4);
-		grafito.agregarVertice(5);
+
+		// Genero un arco desde 1 hasta 2 con el valor de etiqueta 3
 		grafito.agregarArco(1, 2, 3F);
-		grafito.agregarArco(2, 3, 1F);
-		grafito.agregarArco(3, 5, 7F);
-		grafito.agregarArco(5, 4, 8F);
-		/*System.out.println(etiqueta); // Deber�a imprimir 3
-		System.out.println(grafito.cantidadVertices());
-		System.out.println(grafito.cantidadArcos());
-		System.out.println(grafito.tenesAlgunCiclo());
-		System.out.println(grafito.caminoSimple(1, 4));
-		System.out.println(grafito.hayCicloDesde(1));
-		*/
-		System.out.println("1 → 4: " + grafito.hayCamino(1, 4)); // true
-		System.out.println("2 → 5: " + grafito.hayCamino(2, 5)); // true
-		System.out.println("3 → 2: " + grafito.hayCamino(3, 2)); // false
-		System.out.println("5 → 4: " + grafito.hayCamino(5, 4)); // true
-		System.out.println("4 → 1: " + grafito.hayCamino(4, 1)); // false
+		
+		// Obtengo el arco entre 1 y 2, y le pido la etiqueta
+		Float etiqueta = grafito.obtenerArco(1, 2).getEtiqueta();
+		System.out.println(etiqueta); // Deber�a imprimir 3
+		/*Iterator<Arco<Float>> it = grafito.obtenerArcos();
+		while (it.hasNext()) {
+		    Arco<Float> arco = it.next();
+		    System.out.println("Arco de " + arco.getVerticeOrigen() + " a " + arco.getVerticeDestino() + ", etiqueta: " + arco.getEtiqueta());
+		}*/
+
 	}
 
 }
