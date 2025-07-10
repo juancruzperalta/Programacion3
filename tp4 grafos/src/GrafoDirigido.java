@@ -1,8 +1,6 @@
 
 import java.util.*;
 
-import arcoHechoYa.ArcoAnterior;
-
 public class GrafoDirigido<T> implements Grafo<T> {
 	Hashtable<Integer, List<Arco<T>>> mapa_vertices;
 
@@ -23,11 +21,11 @@ public class GrafoDirigido<T> implements Grafo<T> {
 	}
 
 	@Override
-	public void agregarArco(int verticeId1, int verticeId2, T etiqueta) {
+	public void agregarArco(int verticeId1, int verticeId2, T etiqueta, int peso) {
 		if(contieneVertice(verticeId1) && contieneVertice(verticeId2)) {	
 			if(!existeArco(verticeId1, verticeId2)) {
 				List<Arco<T>> arcos = mapa_vertices.get(verticeId1);
-				arcos.add(new Arco<T>(verticeId1, verticeId2, etiqueta));
+				arcos.add(new Arco<T>(verticeId1, verticeId2, etiqueta, peso));
 			}
 		}
 	}
@@ -358,4 +356,110 @@ No importa si el camino es el más corto, largo o de qué longitud — solo impo
 		}
 		}
 	}
+	/*Ejercicio 1 – Camino con restricción de etiquetas
+Dado un grafo dirigido y dos vértices v1 y v2, además de una etiqueta T etiquetaRestringida,
+ escribí un método que devuelva true si 
+existe un camino de v1 a v2 sin pasar por ningún arco cuya etiqueta sea igual a etiquetaRestringida
+*/
+	public boolean encontrarCaminoV1YV2PorRestriccion(int origen, int destino) {
+		//Vamos hacer que la restricción sea etiquetas con valor 3...
+		List<Integer> visitados = new LinkedList<>();
+		visitados.add(origen);
+		if(encontrarCaminoV1YV2PorRestriccion(origen, destino,visitados)) {
+			return true;
+		}
+		return false;
+	}
+
+	private boolean encontrarCaminoV1YV2PorRestriccion(int origen, int destino, List<Integer> visitados) {
+		if(origen==destino) {
+			return true;
+		}else {
+			List<Arco<T>> adya = mapa_vertices.get(origen);
+			for(Arco<T> arc : adya) {
+				int prox = arc.getVerticeDestino();
+				if(!visitados.contains(prox)&& !arc.getEtiqueta().equals(3)) {
+					visitados.add(prox);
+					if(encontrarCaminoV1YV2PorRestriccion(prox, destino, visitados)) {
+						return true;
+					}
+					visitados.remove(visitados.size()-1);
+				}
+			}
+		}
+		return false;
+	}
+	/*🧠 Ejercicio 2 – Todos los caminos que pasen exactamente una vez por 
+	 * cada vértice (camino hamiltoniano)
+Implementá un método que dado un vértice de origen 
+y uno de destino, devuelva una lista con todos los caminos simples posibles que 
+pasan por todos los vértices del grafo exactamente una vez.*/
+	List<List<Integer>> todosLosCaminos = new LinkedList<>();
+	public List<Integer> caminoQuePasaUnaVez(int origen, int destino){
+		List<Integer> camino = new LinkedList<>();
+		List<Integer> visitados = new LinkedList<>();
+		
+		camino.add(origen);
+		visitados.add(origen);
+		caminoQuePasaUnaVezVisit(origen,destino, camino,visitados);
+		return camino;
+	}
+
+	private void caminoQuePasaUnaVezVisit(int origen, int destino, List<Integer> camino, List<Integer> visitados) {
+		visitados.add(origen);
+		camino.add(origen);
+		if(origen == destino) {
+			todosLosCaminos.add(new LinkedList<>(camino));
+		}else {
+			
+		List<Arco<T>> adya = mapa_vertices.get(origen);
+		for(Arco<T> arc: adya) {
+			int prox = arc.getVerticeDestino();
+			if(!visitados.contains(prox)) {
+				caminoQuePasaUnaVezVisit(prox, destino, camino, visitados);
+			}
+		}
+		}
+		visitados.remove(visitados.size()-1);
+		camino.remove(camino.size()-1);
+	}
+	/*Ejercicio 10 – Camino con mayor suma de pesos
+Si los arcos tienen etiquetas numéricas (por ejemplo, Integer), 
+implementá un método que devuelva el camino simple desde 
+v1 a v2 con la mayor suma total de pesos.*/
+	List<Integer> mayorCaminoSuma = new LinkedList<>();
+	int mayorPeso = 0;
+	public List<Integer> caminoMayorConSumaDePesos(int origen, int destino){
+		List<Integer> camino = new LinkedList<>();
+		List<Integer> visitados = new LinkedList<>();
+		int peso=0;
+		caminoMayorConSumaDePesos(origen, destino, camino, peso,visitados);
+		return mayorCaminoSuma;
+	}
+
+	private void caminoMayorConSumaDePesos(int origen, int destino, List<Integer> camino, int peso,
+			List<Integer> visitados) {
+		camino.add(origen);
+		visitados.add(origen);
+		if(origen==destino) {
+			if(peso > mayorPeso) {
+				mayorCaminoSuma.clear();
+				mayorCaminoSuma.addAll(new LinkedList<>(camino));
+				mayorPeso = peso;
+			}
+		}
+		List<Arco<T>> adya = mapa_vertices.get(origen);
+		for(Arco<T> arc : adya) {
+			int prox = arc.getVerticeDestino();
+			if(!visitados.contains(prox)) {
+				peso+=arc.getPeso(); //supongo que los arcos me da los pesos...
+				visitados.add(prox);
+				caminoMayorConSumaDePesos(prox, destino, camino, peso, visitados);
+				visitados.remove(visitados.size()-1);
+				peso-=arc.getPeso();
+			}
+		}
+		camino.remove(camino.size()-1);
+	}
+	
 }

@@ -9,13 +9,23 @@ public class Arco<T> {
 	private int verticeOrigen;
 	private int verticeDestino;
 	private T etiqueta;
+	private int peso;
 
-	public Arco(int verticeOrigen, int verticeDestino, T etiqueta) {
+	public Arco(int verticeOrigen, int verticeDestino, T etiqueta, int peso) {
 		this.verticeOrigen = verticeOrigen;
 		this.verticeDestino = verticeDestino;
 		this.etiqueta = etiqueta;
+		this.peso=peso;
 	}
 	
+	public int getPeso() {
+		return peso;
+	}
+
+	public void setPeso(int peso) {
+		this.peso = peso;
+	}
+
 	public int getVerticeOrigen() {
 		return verticeOrigen;
 	}
@@ -27,5 +37,4 @@ public class Arco<T> {
 	public T getEtiqueta() {
 		return etiqueta;
 	}
-
 }
