@@ -146,4 +146,156 @@ public class Tree {
 		}
 		return nodoDer;
 	}
+	/*Dado un árbol binario de búsquedas que almacena números enteros, implementar un algoritmo
+ que retorne la suma de todos los nodos internos del árbol.*/
+	public int sumaNodosInternos() {
+		if(this.root !=null) {
+			return sumaNodosInternos(this.root);
+		}
+		return 0;
+	}
+	private int sumaNodosInternos(TreeNode node) {
+		if(node == null)return 0;
+		int sumaIzq=0, sumaDer=0;
+		boolean esHoja = node.getLeft()==null&&node.getRight()==null;
+		if(node.getLeft()!=null) {
+			sumaIzq = sumaNodosInternos(node.getLeft());
+		}
+		if(node.getRight() != null) {
+			sumaDer = sumaNodosInternos(node.getRight());
+		}
+		if(!esHoja) {
+			return node.getValue()+sumaIzq+sumaDer;
+		}
+		return sumaIzq+sumaDer;
+	}
+	/* Dado un árbol binario de búsqueda que almacena números
+ enteros y un valor de entrada K, implementar un algoritmo
+ que permita obtener un listado con los valores de todas las
+ hojas cuyo valor supere K. Por ejemplo, para el árbol de la
+ derecha, con un valor K = 8, el resultado debería ser [9, 11]*/
+	public List<Integer> ejercicioDeBusquedaK(int K){
+		if(this.root != null) {
+			return ejercicioDeBusquedaK(this.root, K);
+		}
+		return new LinkedList<>();
+	}
+	private List<Integer> ejercicioDeBusquedaK(TreeNode node, int K){
+		if(node==null)return new LinkedList<>();
+		List<Integer> listaIzq = new LinkedList<>();
+		List<Integer> listaDer = new LinkedList<>();
+		List<Integer> total = new LinkedList<>();
+		boolean esHoja = node.getLeft()==null&&node.getRight()==null;
+		if(node.getLeft() != null) {
+			listaIzq = ejercicioDeBusquedaK(node.getLeft(), K);
+		}
+		if(node.getRight() != null) {
+			listaDer = ejercicioDeBusquedaK(node.getRight(), K);
+		}
+		if(esHoja && node.getValue() > K) {
+			listaIzq.add(node.getValue());
+		}
+		total.addAll(listaIzq);
+		total.addAll(listaDer);
+		return total;
+	}
+	public int contarNodosConUnSoloHijo() {
+		if(this.root != null) {
+			return contarNodosConUnSoloHijo(this.root);
+		}
+		return 0;
+	}
+	private int contarNodosConUnSoloHijo(TreeNode node) {
+		if(node == null)return 0;
+		int hijoIzq=0, hijoDer=0;
+		boolean esHoja=node.getLeft()==null&&node.getRight()==null;
+		if(node.getLeft() != null) {
+			hijoIzq = contarNodosConUnSoloHijo(node.getLeft());
+		}
+		if(node.getRight() != null) {
+			hijoDer = contarNodosConUnSoloHijo(node.getRight());
+		}
+		if(!esHoja) {			
+			if(node.getLeft()==null || node.getRight() == null) {
+				return node.getValue()+hijoIzq+hijoDer;
+			}
+		}
+		return hijoIzq+hijoDer;
+	}
+	/*Dado un árbol binario de búsqueda y dos valores a y b, implementá un método que 
+	 * devuelva una lista con todos los valores que estén dentro del rango [a, b], inclusive.*/
+	public List<Integer> obtenerEnRango(int a, int b){
+		if(this.root != null) {
+			return obtenerEnRango(this.root, a,b);
+		}
+		return new LinkedList<>();
+	}
+	private List<Integer> obtenerEnRango(TreeNode node, int a, int b){
+		if(node==null)return new LinkedList<>();
+		List<Integer> listaIzq = new LinkedList<>();
+		List<Integer> listaDer = new LinkedList<>();
+		List<Integer> total = new LinkedList<>();
+		
+		if(node.getLeft() != null) {
+			listaIzq = obtenerEnRango(node.getLeft(),a,b);
+		}
+		if(node.getRight() != null) {
+			listaDer = obtenerEnRango(node.getRight(), a,b);
+		}
+		if(node.getValue() >= a && node.getValue() <=b) {
+			listaIzq.add(node.getValue());
+		}
+		total.addAll(listaIzq);
+		total.addAll(listaDer);
+		return total;
+	}
+	/*🔸 Ejercicio 3 – Nivel con más nodos
+Implementá un método que devuelva el número del nivel que contiene la mayor cantidad de nodos. 
+En caso de empate, devolvé el nivel más bajo (más cercano a la raíz).
+	 */
+
+	public int nivelConMasNodos() {
+		if(this.root != null) {
+			return nivelConMasNodos(this.root);
+		}
+		return 0;
+	}
+	private int nivelConMasNodos(TreeNode node) {
+		if(node==null)return 0;
+		int listaIzq =0, listaDer=0, alturaIzq=0, alturaDer=0;
+		if(node.getLeft() != null) {
+			listaIzq = nivelConMasNodos(node.getLeft());
+			alturaIzq++;
+		}
+		if(node.getRight() != null) {
+			listaDer = nivelConMasNodos(node.getRight());
+			alturaDer++;
+		}
+		if(listaIzq > listaDer) {
+			return alturaIzq+listaIzq;
+		}else {
+			return alturaDer+listaDer;
+		}
+		
+	}
+	public int sumarDesdeNivel(int k) {
+		if(this.root!=null) {
+			return sumarDesdeNivel(this.root, k,0);
+		}
+		return 0;
+	}
+	private int sumarDesdeNivel(TreeNode node, int k, int altura) {
+		if(node==null)return 0;
+		int sumaIzq=0, sumaDer=0;
+		if(node.getLeft() != null) {
+			sumaIzq = sumarDesdeNivel(node.getLeft(), k, altura+1);
+		}
+		if(node.getRight() != null) {
+			sumaDer = sumarDesdeNivel(node.getRight(), k, altura+1);
+		}
+		if(altura >= k) {
+			return sumaIzq+sumaDer+node.getValue();
+		}
+		return sumaIzq+sumaDer;
+	}
 }
