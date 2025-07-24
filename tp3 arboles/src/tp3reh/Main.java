@@ -10,7 +10,7 @@ public class Main {
 		t.add(4);
 		t.add(7);
 		t.add(9);
-		System.out.println(t.getHeight());
+		/*System.out.println(t.getHeight());
 		System.out.println(t.getLongestBranch());
 		System.out.println(t.getFrontera());
 		System.out.println(t.getMaxElem());
@@ -19,6 +19,10 @@ public class Main {
 		System.out.println(t.contarNodosConUnSoloHijo());
 		System.out.println(t.obtenerEnRango(0, 9));
 		System.out.println(t.nivelConMasNodos());
-		System.out.println(t.sumarDesdeNivel(0));
+		System.out.println(t.sumarDesdeNivel(0));*/
+		System.out.println(t.nivelDelElemento(4));
+		System.out.println(t.caminoHasta(4));
+		System.out.println(t.hojasImparesMayoresA(3));
+		System.out.println(t.nodosInternosMultiplosDe(5));
 	}
 }

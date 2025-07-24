@@ -298,4 +298,100 @@ En caso de empate, devolvé el nivel más bajo (más cercano a la raíz).
 		}
 		return sumaIzq+sumaDer;
 	}
+	public int nivelDelElemento(int x) {
+		if(this.root!=null) {
+			return nivelDelElemento(this.root,x,0);
+		}
+		return -1;
+	}
+	private int nivelDelElemento(TreeNode node, int x, int nivelTotal) {
+		if(node==null)return -1;
+		if(node.getValue()==x) {
+			return nivelTotal;
+		}
+		if(node.getLeft()!=null) {
+			return nivelDelElemento(node.getLeft(), x,nivelTotal+1);
+		}
+		if(node.getRight()!=null) {
+			return nivelDelElemento(node.getRight(), x,nivelTotal+1);
+		}			
+		return -1;
+	}
+	public List<Integer> caminoHasta(int x){
+		if(this.root != null) {
+			return caminoHasta(this.root, x);
+		}
+		return new LinkedList<>();
+	}
+	private List<Integer> caminoHasta(TreeNode node, int x){
+		if(node == null) return new LinkedList<>();
+		List<Integer> listaIzq= new LinkedList<>();
+		List<Integer> listaDer = new LinkedList<>();
+		List<Integer> total = new LinkedList<>();
+		if(node.getValue()==x) {
+			total.add(x);
+			return total;
+		}
+		if(node.getLeft() != null) {
+			listaIzq = caminoHasta(node.getLeft(), x);
+		}
+		if(node.getRight() != null) {
+			listaDer = caminoHasta(node.getRight(), x);
+		}
+		if(!listaIzq.isEmpty()) {			
+		total.addAll(listaIzq);
+		total.add(node.getValue());
+		return total;
+		}
+		if(!listaDer.isEmpty()) {	
+			total.add(node.getValue());
+		total.addAll(listaDer);
+		return total;
+		}
+		return total;
+	}
+	public List<Integer> hojasImparesMayoresA(int k){
+		if(this.root != null) {
+			return hojasImparesMayoresA(this.root, k);
+		}
+		return new LinkedList<>();
+	}
+	private List<Integer> hojasImparesMayoresA(TreeNode node, int k){
+		if(node == null)return new LinkedList<>();
+		List<Integer> listaIzq= new LinkedList<>(), listaDer=new LinkedList<>(), total = new LinkedList<>();
+		if(node.getLeft() != null) {
+			listaIzq = hojasImparesMayoresA(node.getLeft(), k);
+		}
+		if(node.getRight()!=null) {
+			listaDer = hojasImparesMayoresA(node.getRight(), k);
+		}
+		if(node.getValue() %2!=0 && node.getValue() > k) {
+			listaIzq.add(node.getValue());
+		}
+		total.addAll(listaIzq);
+		total.addAll(listaDer);
+		return total;
+	}
+	public List<Integer> nodosInternosMultiplosDe(int n){
+		if(this.root != null) {
+			return nodosInternosMultiplosDe(this.root, n);
+		}
+		return new LinkedList<>();
+	}
+	private List<Integer> nodosInternosMultiplosDe(TreeNode node, int n){
+		if(node == null)return new LinkedList<>();
+		List<Integer> izq = new LinkedList<>(), der = new LinkedList<>(), total = new LinkedList<>();
+		if(node.getLeft() != null) {
+			izq = nodosInternosMultiplosDe(node.getLeft(), n);
+		}
+		if(node.getRight() != null) {
+			der = nodosInternosMultiplosDe(node.getRight(), n);
+		}
+		if(node.getValue()%n==0) {
+			izq.add(node.getValue());
+		}
+		total.addAll(izq);
+		total.addAll(der);
+		return total;
+	}
 }
