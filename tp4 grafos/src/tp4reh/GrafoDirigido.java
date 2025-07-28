@@ -157,6 +157,167 @@ public class GrafoDirigido<T> implements Grafo<T> {
 		colores.put(vert, "negro");
 		return false;
 	}
+	//Devuelve el camino de todos los vertices...
+	public List<Integer> caminoDFS(){
+		Hashtable<Integer,String> colores = new Hashtable<>();
+		List<Integer> camino = new LinkedList<>();
+		for(Integer vert : mapa_vertices.keySet()) {
+			colores.put(vert, "blanco");
+		}
+		for(Integer vert : mapa_vertices.keySet()) {
+			if(colores.get(vert).equals("blanco")) {
+				caminoDFS_visit(vert, colores,camino);
+			}
+		}
+		return camino;
+	}
+	private void caminoDFS_visit(Integer vert, Hashtable<Integer, String> colores, List<Integer> camino) {
+		colores.put(vert, "amarillo");
+		camino.add(vert);
+		List<Arco<T>> arcos = mapa_vertices.get(vert);
+		for(Arco<T> arc : arcos) {
+			int prox = arc.getVerticeDestino();
+			if(colores.get(prox).equals("blanco")) {
+				caminoDFS_visit(prox, colores,camino);
+			}
+			else {
+				if(colores.get(prox).equals("amarillo")) {
+					System.out.println("ciclo");
+				}
+			}
+		}
+		colores.put(vert,"negro");
+	}
+	List<Integer> fila;
+	public List<Integer> caminoBFS(){
+		Hashtable<Integer, Boolean> visitados = new Hashtable<>();
+		fila.clear();
+		for(Integer vert : mapa_vertices.keySet()) {
+			visitados.put(vert, true);
+		}
+		for(Integer vert : mapa_vertices.keySet()) {
+			if(visitados.get(vert).equals(false)) {
+				caminoBFSVisit(visitados, vert);
+			}
+		}
+		return fila;
+	}
+	private void caminoBFSVisit(Hashtable<Integer, Boolean> visitados, Integer vert) {
+		visitados.put(vert, true);
+		fila.add(vert);
+		while(!fila.isEmpty()) {
+			int x = fila.remove(0);
+			List<Arco<T>> arcos = mapa_vertices.get(x);
+			for(Arco<T> arc: arcos) {
+				int adyacente  = arc.getVerticeDestino();
+				if(visitados.get(adyacente).equals(false)) {
+					visitados.put(adyacente, true);
+					fila.add(adyacente);
+				}
+			}
+		}
+	}
+	public boolean tenesAlgunCiclo() {
+		Hashtable<Integer, String> colores = new Hashtable<>();
+		for(Integer vert : mapa_vertices.keySet()) {
+			colores.put(vert,"blanco");
+		}
+		for(Integer vert : mapa_vertices.keySet()) {
+			if(colores.get(vert).equals("blanco")) {
+				if(tenesAlgunCicloVisit(vert, colores)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	private boolean tenesAlgunCicloVisit(Integer vert, Hashtable<Integer, String> colores) {
+		colores.put(vert, "amarillo");
+		List<Arco<T>> arcos = mapa_vertices.get(vert);
+		for(Arco<T> arc: arcos) {
+			int arcoProx = arc.getVerticeDestino();
+			if(colores.get(arcoProx).equals("blanco")) {
+				if(tenesAlgunCicloVisit(arcoProx, colores)) {
+					return true;
+				}
+			}else {
+				if(colores.get(arcoProx).equals("amarillo")) {
+					return true;
+				}
+			}
+		}
+		colores.put(vert, "negro");
+		return false;
+	}
+	/* Ejercicio 4
+ Escribir un algoritmo que, dado un grafo dirigido y dos vértices i, j de este grafo, devuelva el
+ camino simple (sin ciclos) de mayor longitud del vértice i al vértice j. Puede suponerse que el
+ grafo de entrada es acíclico.*/
+	public List<Integer> caminoDiri(int i, int j){
+		List<Integer> camino = new LinkedList<>();
+		List<Integer> caminoAct = new LinkedList<>();
+		Hashtable<Integer, String> colores = new Hashtable<>();
+		for(Integer vert : mapa_vertices.keySet()) {
+			colores.put(vert, "blanco");
+		}
+		caminoDiriVisit(colores, i,j,camino, caminoAct);
+		return camino;
+	}
+	private void caminoDiriVisit(Hashtable<Integer, String> colores, int i, int j, List<Integer> camino,
+			List<Integer> caminoAct) {
+		caminoAct.add(i);
+		colores.put(i, "amarillo");
+		if(i==j) {
+			if(camino.size() < caminoAct.size()) {
+				camino.clear();
+				camino.addAll(caminoAct);
+			}
+		}
+		List<Arco<T>> arcos = mapa_vertices.get(i);
+		for(Arco<T> arc : arcos) {
+			int prox = arc.getVerticeDestino();
+			if(colores.get(prox).equals("blanco")) {
+				caminoDiriVisit(colores, prox, j, camino, caminoAct);
+			}
+		}
+		colores.put(i, "negro");
+		caminoAct.remove(caminoAct.size()-1);
+	}
+	/*Objetivo:
+Escribir un método que, dado un grafo dirigido (puede tener ciclos), 
+y dos vértices origen y destino, devuelva la cantidad total de caminos simples
+ (es decir, sin repetir vértices) que existen desde origen hasta destino*/
+	Hashtable<List<Integer>, Integer> general = new Hashtable<>();
+	int contador=0;
+	public int contarCaminosSimples(int origen, int destino) {
+	    Hashtable<Integer, String> colores = new Hashtable<>();
+	    List<Integer> camino = new LinkedList<>();
+	    for(Integer vert : mapa_vertices.keySet()) {
+	    	colores.put(vert, "blanco");
+	    }
+	    contarCaminosSimplesVisit(colores, origen, destino,camino);
+	    return contador;
+	}
+	private void contarCaminosSimplesVisit(Hashtable<Integer, String> colores, int origen, int destino,
+			List<Integer> camino) {
+		colores.put(origen, "amarillo");
+		camino.add(origen);
+		if(origen == destino) {
+			contador++;
+			general.put(camino, contador);
+		}
+		List<Arco<T>> arcos = mapa_vertices.get(origen);
+		for(Arco<T> arc : arcos) {
+			int prox = arc.getVerticeDestino();
+			if(colores.get(prox).equals("blanco")){
+				contarCaminosSimplesVisit(colores, prox, destino, camino);
+			}
+		}
+		colores.put(origen, "blanco");
+		camino.remove(camino.size()-1);
+	}
+	/*Objetivo:
+Escribir un método que, dado un grafo dirigido (puede tener ciclos), 
+y dos vértices origen y destino, devuelva los posibles caminos*/
 	
-
 }
