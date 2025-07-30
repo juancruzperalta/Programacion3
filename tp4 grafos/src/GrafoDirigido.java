@@ -259,6 +259,7 @@ Dado un vértice origen v1 y un destino v2,
 		visitados.remove(visitados.size()-1);
 		return false;
 	}
+	
 	/*Dado un vértice de inicio v, escribí un método que retorne true si existe un
 	 *  ciclo en el grafo que pueda alcanzarse desde v, es decir, un camino que vuelva 
 	 *  a un nodo ya visitado desde v.*/
@@ -291,6 +292,7 @@ Dado un vértice origen v1 y un destino v2,
 		colores.put(verticeInicio, "negro");
 		return false;
 	}
+	
 	/*Dado un vértice origen v1, un vértice destino v2, y un vértice intermedio obligatorio v3, 
 	 * escribí un método que retorne true si existe algún camino dirigido que vaya de v1 a v2 pasando obligatoriamente por v3.
 No importa si el camino es el más corto, largo o de qué longitud — solo importa que v3 esté incluido.*/
@@ -322,6 +324,7 @@ No importa si el camino es el más corto, largo o de qué longitud — solo impo
 		visitados.remove(visitados.size()-1);
 		return false;
 	}
+	
 	/*Ejercicio 4
  Escribir un algoritmo que, dado un grafo dirigido y dos vértices i, j de este grafo, devuelva el
  camino simple (sin ciclos) de mayor longitud del vértice i al vértice j. Puede suponerse que el
@@ -356,6 +359,7 @@ No importa si el camino es el más corto, largo o de qué longitud — solo impo
 		}
 		}
 	}
+	
 	/*Ejercicio 1 – Camino con restricción de etiquetas
 Dado un grafo dirigido y dos vértices v1 y v2, además de una etiqueta T etiquetaRestringida,
  escribí un método que devuelva true si 
@@ -423,6 +427,7 @@ pasan por todos los vértices del grafo exactamente una vez.*/
 		visitados.remove(visitados.size()-1);
 		camino.remove(camino.size()-1);
 	}
+	
 	/*Ejercicio 10 – Camino con mayor suma de pesos
 Si los arcos tienen etiquetas numéricas (por ejemplo, Integer), 
 implementá un método que devuelva el camino simple desde 

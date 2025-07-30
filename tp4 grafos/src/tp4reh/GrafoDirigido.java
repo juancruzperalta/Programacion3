@@ -29,11 +29,11 @@ public class GrafoDirigido<T> implements Grafo<T> {
 	}
 
 	@Override
-	public void agregarArco(int verticeId1, int verticeId2, T etiqueta) {
+	public void agregarArco(int verticeId1, int verticeId2, T etiqueta, int peso) {
 		if(contieneVertice(verticeId1) && contieneVertice(verticeId2)) {
 			if(!existeArco(verticeId1, verticeId2)) {
 				List<Arco<T>> lista = mapa_vertices.get(verticeId1);
-				lista.add(new Arco<T>(verticeId1, verticeId2, etiqueta));
+				lista.add(new Arco<T>(verticeId1, verticeId2, etiqueta, peso));
 			}
 		}
 	}
@@ -319,5 +319,258 @@ y dos vértices origen y destino, devuelva la cantidad total de caminos simples
 	/*Objetivo:
 Escribir un método que, dado un grafo dirigido (puede tener ciclos), 
 y dos vértices origen y destino, devuelva los posibles caminos*/
+	public List<List<Integer>> caminoVuelta(int origen, int destino){
+		List<Integer> camino = new LinkedList<>();
+		List<List<Integer>> caminoMejor = new LinkedList<>();
+		Hashtable<Integer, String> colores = new Hashtable<>();
+		for(Integer cam : mapa_vertices.keySet()) {
+			colores.put(cam, "blanco");
+		}
+		caminoVueltaVisit(origen, destino, camino, caminoMejor, colores);
+		return caminoMejor;
+	}
+	private void caminoVueltaVisit(int origen, int destino, List<Integer> camino, List<List<Integer>> caminoMejor,
+			Hashtable<Integer, String> colores) {
+		colores.put(origen, "amarillo");
+		camino.add(origen);
+		if(origen==destino) {
+			caminoMejor.add(new LinkedList<>(camino));
+		}
+		List<Arco<T>> arcos = mapa_vertices.get(origen);
+		for(Arco<T> arc: arcos) {
+			int arco = arc.getVerticeDestino();
+			if(colores.get(arco).equals("blanco")) {
+				caminoVueltaVisit(arco, destino, camino, caminoMejor, colores);
+			}
+		}
+		colores.put(origen, "blanco");
+		camino.remove(camino.size()-1);
+	}
+	/*Dado un vértice origen v1, un vértice destino v2,
+	 *  y un entero K, implementá un método que retorne true si existe
+	 *  al menos un camino dirigido de longitud exactamente K entre ellos, 
+	 *  y false en caso contrario.*/
+	public boolean caminoDirigidoExactamenteK(int origen, int destino, int K) {
+		List<Integer> visitado = new LinkedList<>();
+		if(caminoDirigidoExactamenteKVisit(origen, destino, K, visitado)) {
+			return true;
+		}
+		return false;
+	}
+	private boolean caminoDirigidoExactamenteKVisit(int origen, int destino, int k, List<Integer> visitado) {
+		visitado.add(origen);
+		if(origen == destino) {
+			if(visitado.size()==k) {
+				return true;
+			}
+		}
+		List<Arco<T>> arcos = mapa_vertices.get(origen);
+		for(Arco<T> arc : arcos) {
+			int prox = arc.getVerticeDestino();
+			if(!visitado.contains(prox)) {
+				if(caminoDirigidoExactamenteKVisit(prox, destino, k,visitado)) {
+					return true;
+				}
+			}
+		}
+		visitado.remove(visitado.size()-1);
+		return false;
+	}
 	
+	/*Dado un vértice de inicio v, escribí un método que retorne true si existe un
+	 *  ciclo en el grafo que pueda alcanzarse desde v, es decir, un camino que vuelva 
+	 *  a un nodo ya visitado desde v.*/
+	public boolean existeCiclo(int origen) {
+		Hashtable<Integer, String> colores = new Hashtable<>();
+		for(Integer vert : mapa_vertices.keySet()) {
+			colores.put(vert,"blanco");
+		}
+		if(existeCicloVisit(origen, colores)) {
+			return true;
+		}
+		return false;
+	}
+	public boolean existeCicloVisit(int origen, Hashtable<Integer, String> colores) {
+		colores.put(origen, "amarillo");
+		List<Arco<T>> arcos = mapa_vertices.get(origen);
+		for(Arco<T> arc:  arcos) {
+			int prox = arc.getVerticeDestino();
+			if(colores.get(prox).equals("blanco")) {
+				if(existeCicloVisit(prox, colores)) {
+					return true;
+				}
+			}else {
+				if(colores.get(prox).equals("amarillo")) {
+					return true;
+				}
+			}
+		}
+		colores.put(origen, "negro");
+		return false;
+	}
+	/*Dado un vértice origen v1, un vértice destino v2, y un vértice intermedio obligatorio v3, 
+	 * escribí un método que retorne true si existe algún camino dirigido que vaya de v1 a v2 pasando obligatoriamente por v3.
+No importa si el camino es el más corto, largo o de qué longitud — solo importa que v3 esté incluido.*/
+	public boolean existeCaminoQuePasePorV3(int origen, int destino, int V3) {
+		List<Integer> visitado= new LinkedList<>();
+		if(existeCaminoQuePasePorV3Visit(origen, destino, V3,visitado)) {
+			return true;
+		}
+		return false;
+	}
+	private boolean existeCaminoQuePasePorV3Visit(int origen, int destino, int v3, List<Integer> visitado) {
+		visitado.add(origen);
+		if(visitado.contains(v3)) {			
+			if(origen == destino) {
+				return true;
+			}
+		}
+		List<Arco<T>> arcos = mapa_vertices.get(origen);
+		for(Arco<T> arc: arcos) {
+			int prox = arc.getVerticeDestino();
+			if(!visitado.contains(prox)) {
+				if(existeCaminoQuePasePorV3Visit(prox, destino, v3, visitado)) {
+					return true;
+				}
+			}
+		}
+		visitado.remove(visitado.size()-1);
+		return false;
+	}
+	/*Ejercicio 1 – Camino con restricción de etiquetas
+Dado un grafo dirigido y dos vértices v1 y v2, además de una etiqueta T etiquetaRestringida,
+ escribí un método que devuelva true si 
+existe un camino de v1 a v2 sin pasar por ningún arco cuya etiqueta sea igual a etiquetaRestringida
+*/
+	public boolean caminoSinPasarTrampa(int origen, int destino, T trampa) {
+		List<Integer> visitado = new LinkedList<>();
+		if(caminoSinPasarTrampa(origen, destino, trampa,visitado)) {
+			return true;
+		}
+		return false;
+	}
+	private boolean caminoSinPasarTrampa(int origen, int destino, T etiqueta, List<Integer> visitado) {
+		visitado.add(origen);
+		boolean NopasePorTrampa=true;
+		if(NopasePorTrampa) {			
+			if(origen == destino) {
+			return true;
+			}
+		}
+		List<Arco<T>> arcos = mapa_vertices.get(origen);
+		for(Arco<T> arc: arcos) {
+			int prox = arc.getVerticeDestino();
+			if(!visitado.contains(prox)) {
+				if(arc.getEtiqueta() == etiqueta) {
+					NopasePorTrampa=false;
+				}
+				if(caminoSinPasarTrampa(prox, destino, etiqueta, visitado)) {
+					return true;
+				}
+			}
+		}
+		NopasePorTrampa=true;
+		visitado.remove(visitado.size()-1);
+		return false;
+	}
+	/*Ejercicio 10 – Camino con mayor suma de pesos
+Si los arcos tienen etiquetas numéricas (por ejemplo, Integer), 
+implementá un método que devuelva el camino simple desde 
+v1 a v2 con la mayor suma total de pesos.*/
+	int sumaMayorPeso=0;
+	public List<Integer> caminoConMayorSumaPesos(int origen, int destino){
+		List<Integer> camino = new LinkedList<>();
+		int sumaCamino=0;
+		List<Integer> caminoMayorPeso = new LinkedList<>();
+		caminoConMayorSumaPesosVisit(origen, destino,camino, caminoMayorPeso, sumaCamino);
+		return caminoMayorPeso;
+	}
+	private void caminoConMayorSumaPesosVisit(int origen, int destino, List<Integer> camino,
+			List<Integer> caminoMayorPeso, int sumaCamino) {
+		camino.add(origen);
+		if(origen == destino) {
+			if(sumaCamino > sumaMayorPeso) {
+				sumaMayorPeso = sumaCamino;
+				caminoMayorPeso.clear();
+				caminoMayorPeso.addAll(new LinkedList<>(camino));
+			}
+		}
+		List<Arco<T>> arcos = mapa_vertices.get(origen);
+		for(Arco<T> arc: arcos) {
+			int prox = arc.getVerticeDestino();
+			if(!camino.contains(prox)) {
+				sumaCamino += arc.getPeso();
+				caminoConMayorSumaPesosVisit(prox, destino, camino, caminoMayorPeso, sumaCamino);
+			}
+		}
+		camino.remove(camino.size()-1);
+		sumaCamino=0;
+	}
+	/*Ejercicio 11 – Camino con peso mínimo evitando vértices prohibidos
+Dado un grafo dirigido, un vértice origen v1, un vértice destino v2 y 
+una lista de vértices prohibidos, escribí un método que devuelva el 
+camino de menor peso total que vaya de v1 a v2 sin pasar por ninguno de los vértices prohibidos. 
+Si no existe, devolver lista vacía.*/
+	int caminoMenorPeso=300000;
+	List<Integer> caminoMenor = new LinkedList<>();
+	public List<Integer> caminoMenorPesoSinProhibido(int origen, int destino, int prohibido){
+		List<Integer> camino = new LinkedList<>();
+		int caminoPeso=0;
+		caminoMenorPesoSinProhibidoVisit(origen, destino, prohibido, camino
+				, caminoPeso);
+		return caminoMenor;
+	}
+	private void caminoMenorPesoSinProhibidoVisit(int origen, int destino, int prohibido, List<Integer> camino,
+			 int caminoPeso) {
+		camino.add(origen);
+		if(origen == destino) {
+			if(caminoPeso < caminoMenorPeso) {
+				caminoMenorPeso = caminoPeso;
+				caminoMenor.clear();
+				caminoMenor.addAll(new LinkedList<>(camino));
+			}
+		}
+		List<Arco<T>> arcos = mapa_vertices.get(origen);
+		for(Arco<T> arc : arcos) {
+			int prox = arc.getVerticeDestino();
+			if(!camino.contains(prox)) {
+				if(prox!=prohibido) {
+				caminoPeso+=arc.getPeso();
+				caminoMenorPesoSinProhibidoVisit(prox, destino, prohibido, camino, caminoPeso);
+				}
+			}
+		}
+		camino.remove(camino.size()-1);
+		caminoPeso=0;
+	}
+	
+	/*Ejercicio 12 – Todos los caminos de peso exactamente K
+Dado un grafo dirigido (puede tener ciclos), un vértice origen v1, 
+un vértice destino v2 y un número K, escribí un método que devuelva todos 
+los caminos simples (sin repetir vértices) 
+que van de v1 a v2 y cuya suma de pesos sea exactamente K.*/
+	public List<List<Integer>> todosLosCaminosIgualesK(int origen, int destino, int K){
+		List<Integer> camino = new LinkedList<>();
+		List<List<Integer>> todosCaminos = new LinkedList<>();
+		todosLosCaminosIgualesK(origen, destino, K, camino, todosCaminos);
+		return todosCaminos;
+	}
+	int sumaValor=0;
+	private void todosLosCaminosIgualesK(int origen, int destino, int k, List<Integer> camino,
+			List<List<Integer>> todosCaminos) {
+		camino.add(origen);
+		if(origen == destino && sumaValor==k) {
+			todosCaminos.add(new LinkedList<>(camino));
+		}
+		List<Arco<T>> arcos = mapa_vertices.get(origen);
+		for(Arco<T> arc : arcos) {
+			int prox = arc.getVerticeDestino();
+			if(!camino.contains(prox)) {	
+			sumaValor+=arc.getPeso();
+			todosLosCaminosIgualesK(prox, destino, k, camino, todosCaminos);
+			}
+		}
+		camino.remove(camino.size()-1);
+		sumaValor=0;
+	}
 }
