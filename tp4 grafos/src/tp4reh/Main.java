@@ -22,6 +22,7 @@ public class Main {
 		grafito.agregarArco(4, 5, 2F, 15);
 		System.out.println(grafito.caminoVuelta(1, 4));
 		System.out.println(grafito.todosLosCaminosIgualesK(1, 4, 3));
+		
 	}
 
 }
