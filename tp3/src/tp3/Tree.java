@@ -225,4 +225,16 @@ public class Tree {
 			total.addAll(der);
 			return total;
 	}
+	
+	public boolean tieneMismaEstructura(TreeNode a1, TreeNode a2) {
+		if(a1 != null && a2 != null) {
+			return tieneMismaEstructura2(a1,a2);
+		}
+		return false;
+	}
+	private boolean tieneMismaEstructura2(TreeNode a1, TreeNode a2) {
+		if(a1 == null && a2 == null) return true;
+		if(a1 == null || a2 == null) return false;
+		return tieneMismaEstructura2(a1.getLeft(), a2.getLeft()) && tieneMismaEstructura2(a1.getRight(), a2.getRight());
+	}
 }
